@@ -21,9 +21,9 @@ class Sequence {
         let x3 = calcCoordinatesOfTurnedPoint(this.x0, this.y0, x1, y1, -120)['x'];
         let y3 = calcCoordinatesOfTurnedPoint(this.x0, this.y0, x1, y1, -120)['y'];
 
-        this.baseVector.draw(x1,y1,'orange',width=width);
-        this.nextVector.draw(x2,y2,'green',width=width);
-        this.prevVector.draw(x3,y3,'red',width=width);
+        this.baseVector.draw(x1,y1,width=width);
+        this.nextVector.draw(x2,y2,width=width);
+        this.prevVector.draw(x3,y3,width=width);
         this.baseVector.xPrev = x1;
         this.baseVector.yPrev = y1;
         this.nextVector.xPrev = x2;
@@ -31,4 +31,34 @@ class Sequence {
         this.prevVector.xPrev = x3;
         this.prevVector.yPrev = y3;   
     }
+	
+    drawZeroSequence (x1,y1, width=3){ // to draw zero sequence vectors from point(x0,y0) to point(x1,y1)
+
+        let x2 = calcCoordinatesOfTurnedPoint(this.x0, this.y0, x1, y1, 2.5)['x'];
+        let y2 = calcCoordinatesOfTurnedPoint(this.x0, this.y0, x1, y1, 2.5)['y'];
+        let x3 = calcCoordinatesOfTurnedPoint(this.x0, this.y0, x1, y1, -2.5)['x'];
+        let y3 = calcCoordinatesOfTurnedPoint(this.x0, this.y0, x1, y1, -2.5)['y'];
+	
+        let x02 = calcCoordinatesOfTurnedPoint(x1, y1, this.x0, this.y0, -2.5)['x'];
+        let y02 = calcCoordinatesOfTurnedPoint(x1, y1, this.x0, this.y0, -2.5)['y'];
+        let x03 = calcCoordinatesOfTurnedPoint(x1, y1, this.x0, this.y0, 2.5)['x'];
+        let y03 = calcCoordinatesOfTurnedPoint(x1, y1, this.x0, this.y0, 2.5)['y'];
+		
+		this.nextVector.x0=x02;
+		this.nextVector.y0=y02;
+		this.prevVector.x0=x03;
+		this.prevVector.y0=y03;
+		
+        this.baseVector.draw(x1,y1,width=width);
+        this.nextVector.draw(x2,y2,width=width);
+        this.prevVector.draw(x3,y3,width=width);
+		
+        this.baseVector.xPrev = x1;
+        this.baseVector.yPrev = y1;
+        this.nextVector.xPrev = x2;
+        this.nextVector.yPrev = y2;
+        this.prevVector.xPrev = x3;
+        this.prevVector.yPrev = y3; 
+    }
+	
 }

@@ -6,14 +6,18 @@ class Vector {
     xPrev;
     yPrev;
     
+	color = 'black';
+	
     isLighted = false; // true if vector is captured onmousemove, otherwise false
     isCaptured = false; // true if the vector is captured onmousedown, otherwise false
 
-    constructor(x0, y0, xPrev, yPrev) {
+    constructor(x0, y0, xPrev, yPrev, color) {
         this.x0 = x0;
         this.y0 = y0;
         this.xPrev = xPrev;
         this.yPrev = yPrev;
+        this.color = color;
+
     }
 
     radius() {  // to calculate distance from center to vector point
@@ -24,11 +28,11 @@ class Vector {
         return ((this.xPrev-x)**2+(this.yPrev-y)**2)**0.5;
     }
 
-    draw (x1,y1,color,width=3){ // to draw vector from center to point(x1,y1)
+    draw (x1,y1,width=3){ // to draw vector from center to point(x1,y1)
         ctx.save();
         ctx.lineCap = 'round';
         ctx.lineWidth = width;
-        ctx.strokeStyle = color;
+        ctx.strokeStyle = this.color;
         // draw line
         ctx.beginPath();
         ctx.moveTo(this.x0,this.y0);
