@@ -15,7 +15,7 @@ class Sequence {
         this.y0 = y0;
     }
 
-    draw (x1,y1, width=3){ // to draw vector from center to point(x1,y1)
+    drawSequence (x1,y1, width=3){ // to draw vector from center to point(x1,y1)
         let x2 = calcCoordinatesOfTurnedPoint(this.x0, this.y0, x1, y1, 120)['x'];
         let y2 = calcCoordinatesOfTurnedPoint(this.x0, this.y0, x1, y1, 120)['y'];
         let x3 = calcCoordinatesOfTurnedPoint(this.x0, this.y0, x1, y1, -120)['x'];
@@ -61,4 +61,27 @@ class Sequence {
         this.prevVector.yPrev = y3; 
     }
 	
+	
+    drawPhaseVectors (x1,y1, width=3){ // to draw vector from center to point(x1,y1)
+
+
+        if (this.baseVector.isCaptured /*|| this.baseVector.isLighted*/){
+            this.baseVector.draw(x1,y1,width=width);
+            this.baseVector.xPrev = x1;
+            this.baseVector.yPrev = y1;
+        } else if(this.nextVector.isCaptured /*|| this.nextVector.isLighted*/) {
+            this.nextVector.draw(x1,y1,width=width);
+            this.nextVector.xPrev = x1;
+            this.nextVector.yPrev = y1;
+        } else if(this.prevVector.isCaptured /*|| this.prevVector.isLighted*/) {
+            this.prevVector.draw(x1,y1,width=width);
+            this.prevVector.xPrev = x1;
+            this.prevVector.yPrev = y1;
+        }
+
+        this.baseVector.draw(this.baseVector.xPrev,this.baseVector.yPrev,width=width);
+        this.nextVector.draw(this.nextVector.xPrev,this.nextVector.yPrev,width=width);
+        this.prevVector.draw(this.prevVector.xPrev,this.prevVector.yPrev,width=width);
+        
+    }
 }
