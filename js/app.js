@@ -136,12 +136,10 @@ canvas.onmousemove = function(event){
             } else {
                 // drawing directSequence if any vector is captured onmousemove
                 if (vectorOrange1.clickDistance(x,y)<25){
-                    //vectorOrange1.isLighted = true;
                     posSeq.drawSequence(vectorOrange1.xPrev,vectorOrange1.yPrev,5);
                 }
                 else{
                     posSeq.drawSequence(vectorOrange1.xPrev,vectorOrange1.yPrev);
-                    //vectorOrange1.isLighted = false;
                 }
             }
             
@@ -168,13 +166,11 @@ canvas.onmousemove = function(event){
             } else {
                 // drawing directSequence if any vector is captured onmousemove
                 if (vectorOrange3.clickDistance(x,y)<25){
-                    //vectorOrange3.isLighted = true;
                     negSeq.drawSequence(vectorOrange3.xPrev,vectorOrange3.yPrev,5);
                 }
                 else{
                     negSeq.drawSequence(vectorOrange3.xPrev,vectorOrange3.yPrev);
                 }
-                //vectorOrange3.isLighted = false;
 
             }
             
@@ -184,23 +180,20 @@ canvas.onmousemove = function(event){
             } else {
                 // drawing directSequence if any vector is captured onmousemove
                 if (vectorOrange4.clickDistance(x,y)<25){
-                    //vectorOrange4.isLighted = true;
                     zeroSeq.drawZeroSequence(vectorOrange4.xPrev,vectorOrange4.yPrev,5);
                 }
                 else{
                     zeroSeq.drawZeroSequence(vectorOrange4.xPrev,vectorOrange4.yPrev);
                 }
-                //vectorOrange4.isLighted = false;
-
             }
         
 		
     document.getElementById("Va").value = vectorOrange2.radius();
     document.getElementById("Vb").value = vectorGreen2.radius();
     document.getElementById("Vc").value = vectorRed2.radius();
-    document.getElementById("FIa").value = vectorOrange2.xPrev;
-    document.getElementById("FIb").value = vectorOrange2.xPrev;
-    document.getElementById("FIc").value = vectorOrange2.xPrev;
+    document.getElementById("FIa").value = vectorOrange2.angle();
+    document.getElementById("FIb").value = vectorGreen2.angle();
+    document.getElementById("FIc").value = vectorRed2.angle();
 }
 
 canvas.onmouseup = function(event){
@@ -222,8 +215,8 @@ canvas.onmouseout = function(event){
 document.getElementById("Va").value = vectorOrange2.radius();
 document.getElementById("Vb").value = vectorGreen2.radius();
 document.getElementById("Vc").value = vectorRed2.radius();
-document.getElementById("FIa").value = vectorOrange2.xPrev;
-document.getElementById("FIb").value = vectorOrange2.xPrev;
-document.getElementById("FIc").value = vectorOrange2.xPrev;
+document.getElementById("FIa").value = vectorOrange2.angle();
+document.getElementById("FIb").value = vectorGreen2.angle();
+document.getElementById("FIc").value = vectorRed2.angle();
 
 

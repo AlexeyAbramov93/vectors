@@ -5,34 +5,56 @@
     <title>Симметричные составляющие</title>
   </head>
   <body>
-    <header></header>
-    <h1>РАЗЛОЖЕНИЕ НА СИММЕТРИЧНЫЕ СОСТАВЛЯЮЩИЕ</h1>
-    <form action="/action_page.php">
-      <fieldset>
-        <legend>information:</legend>
-        Va:
-        <input type="text" name="Va" value=""  id="Va">
-        FIa:
-        <input type="text" name="FIa" value="" id="FIa"><br>
-        Vb:
-        <input type="text" name="Vb" value=""  id="Vb">
-        FIb:
-        <input type="text" name="FIb" value="" id="FIb"><br>
-        Vc:
-        <input type="text" name="Vc" value=""  id="Vc">
-        FIc:
-        <input type="text" name="FIc" value="" id="FIc">
 
-        <!-- <input type="submit" value="Submit"> -->
-      </fieldset>
-    </form>
-    <canvas id="canvas" width="1200" height="1200"></canvas>
+
+
+    <div class="wrapper">
+      <div class="header">
+        <h1>РАЗЛОЖЕНИЕ НА СИММЕТРИЧНЫЕ СОСТАВЛЯЮЩИЕ</h1>
+      </div>
+ 
+      <div class="clearfix">
+        <div class="left-panel">
+            <form action="/action_page.php">
+              <fieldset>
+                <legend>information:</legend>
+                Va:
+                <input type="text" name="Va" value=""  id="Va"><br>
+                FIa:
+                <input type="text" name="FIa" value="" id="FIa"><br>
+                Vb:
+                <input type="text" name="Vb" value=""  id="Vb"><br>
+                FIb:
+                <input type="text" name="FIb" value="" id="FIb"><br>
+                Vc:
+                <input type="text" name="Vc" value=""  id="Vc"><br>
+                FIc:
+                <input type="text" name="FIc" value="" id="FIc"><br>
+        
+                <!-- <input type="submit" value="Submit"> -->
+              </fieldset>
+            </form>
+        </div>
+        
+        <div class="content">
+          <div class="content">
+            <canvas id="canvas" width="700" height="700"></canvas>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="footer"></div>
+    </div>
+
+
     <script src="js/Axes.js"></script>
     <script src="js/Vector.js"></script>
     <script src="js/Sequence.js"></script>
     <script src="js/app.js"></script>
 
 
-    <footer></footer>
+
   </body>
 </html>

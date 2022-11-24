@@ -8,7 +8,6 @@ class Vector {
     
 	color = 'black';
 	
-    isLighted = false; // true if vector is captured onmousemove, otherwise false
     isCaptured = false; // true if the vector is captured onmousedown, otherwise false
 
     constructor(x0, y0, xPrev, yPrev, color) {
@@ -21,11 +20,25 @@ class Vector {
     }
 
     radius() {  // to calculate distance from center to vector point
-        return (((this.xPrev-this.x0)**2 + (this.yPrev-this.y0)**2)**0.5/200/axisScale).toFixed(2);
+        return (((this.xPrev-this.x0)**2 + (this.yPrev-this.y0)**2)**0.5/(canvas.width/4)/axisScale).toFixed(2);
     }
 
     clickDistance(x,y) { // to calculate distance from click point to vector point
         return ((this.xPrev-x)**2+(this.yPrev-y)**2)**0.5;
+    }
+
+    angle() {
+
+        let x = (this.xPrev-this.x0);
+        let y = (this.yPrev-this.y0);
+
+        if(y<0){
+            return (Math.atan(x/y) / Math.PI * 180).toFixed(2);;
+        } else if(x<0){
+            return (Math.atan(x/y) / Math.PI * 180 + 180).toFixed(2);;
+        } else if(x>=0){
+            return (Math.atan(x/y) / Math.PI * 180 - 180).toFixed(2);;
+        }
     }
 
     draw (x1,y1,width=3){ // to draw vector from center to point(x1,y1)
