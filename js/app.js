@@ -1,7 +1,7 @@
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 
-axisScale = 0.8;    // to set scale of the canvas
+axisScale = 0.75;    // to set scale of the canvas
 arc_count=4;        // to set a number of arcs
 degrees={0:'0',1:'-30',2:'-60',3:'-90',4:'-120',5:'-150',6:'-180',7:'150',8:'120',9:'90',10:'60',11:'30'};
 
@@ -69,7 +69,6 @@ let vectorRed2 = new Vector(o2.x, o2.y,initXRed2,initYRed2, 'red');
 
 let phaseVectors = new Sequence(vectorOrange2,vectorGreen2,vectorRed2,o2.x, o2.y);
 phaseVectors.drawPhaseVectors(initXOrange2,initYOrange2);
-
 
 let initXOrange3 = o3.x;
 let initYOrange3 = o3.y-canvas.width/4*axisScale;
@@ -220,3 +219,15 @@ document.getElementById("FIb").value = vectorGreen2.angle();
 document.getElementById("FIc").value = vectorRed2.angle();
 
 
+
+var z1=new Complex(100,-33.33);
+var z2=new Complex(186.5,16.67);
+var z3=new Complex(13.5,16.67);
+
+console.log(z1.mod());
+console.log(z2.mod());
+console.log(z3.mod());
+
+console.log(z1.arg()*180/Math.PI);
+console.log(z2.arg()*180/Math.PI);
+console.log(z3.arg()*180/Math.PI);
