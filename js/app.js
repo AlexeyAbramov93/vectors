@@ -1,257 +1,266 @@
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 
+axisScale = 0.75;    // to set scale of the canvas
+arc_count=4;        // to set a number of arcs
+degrees={0:'0',1:'-30',2:'-60',3:'-90',4:'-120',5:'-150',6:'-180',7:'150',8:'120',9:'90',10:'60',11:'30'};
 
-axisScale = 0.9;    // to set scale of the canvas
-
-// shifted origin of the canvas geometic center 
-o = {
+o1 = {
     x: canvas.width*0.75,
     y: canvas.height*0.25,
 }
-
-// to draw axes from the canvas geometic center 
-function drawAxes(width=0.3){
-    ctx.save();
-    ctx.lineWidth = width;
-    ctx.strokeStyle = 'black';
-    arc_count=4;        // to set a number of arcs
-    for (let i=0;i<arc_count;i++){
-        ctx.beginPath();
-        ctx.arc(o.x,o.y,(0.25*canvas.width/arc_count*(i+1))*axisScale,0,Math.PI*2);
-        ctx.stroke();
-    }
-
-    degrees={0:'0',1:'-30',2:'-60',3:'-90',4:'-120',5:'-150',6:'-180',7:'150',8:'120',9:'90',10:'60',11:'30'};
-    for (let i=0;i<12;i++){
-        ctx.beginPath();
-        ctx.moveTo(o.x,o.y);
-        ctx.lineTo(o.x,o.y*(1-axisScale));
-        ctx.font = "16px serif";
-        ctx.textAlign = "center";
-        ctx.fillText(degrees[i], o.x, o.y*(0.98-axisScale));
-        ctx.stroke();
-        ctx.translate(o.x, o.y);            // translate to rectangle center
-        ctx.rotate((Math.PI / 180) * 30);   // rotate
-        ctx.translate(-o.x, -o.y);          // translate back
-    }
-    ctx.restore();
+o2 = {
+    x: canvas.width*0.25,
+    y: canvas.height*0.25,
+}
+o3 = {
+    x: canvas.width*0.25,
+    y: canvas.height*0.75,
+}
+o4 = {
+    x: canvas.width*0.75,
+    y: canvas.height*0.75,
 }
 
-class Vector {
+leftBottomAxes = new Axes(o3.x,o3.y);
+leftTopAxes = new Axes(o2.x,o2.y);
+rightTopAxes = new Axes(o1.x,o1.y);
+rightBottomAxes = new Axes(o4.x,o4.y);
 
-    xPrev;
-    yPrev;
-    
-    isLighted = false; // true if vector is captured onmousemove, otherwise false
-    isCaptured = false; // true if the vector is captured onmousedown, otherwise false
 
-    constructor(xPrev, yPrev) {
-      this.xPrev = xPrev;
-      this.yPrev = yPrev;
-    }
-
-    radius() {  // to calculate distance from center to vector point
-        return (((this.xPrev-o.x)**2 + (this.yPrev-o.y)**2)**0.5/200/axisScale).toFixed(2);
-    }
-
-    clickDistance(x,y) { // to calculate distance from click point to vector point
-        return ((this.xPrev-x)**2+(this.yPrev-y)**2)**0.5;
-    }
-
-    draw (x1,y1,color,width=3){ // to draw vector from center to point(x1,y1)
-        ctx.save();
-        ctx.lineCap = 'round';
-        ctx.lineWidth = width;
-        ctx.strokeStyle = color;
-        // draw line
-        ctx.beginPath();
-        ctx.moveTo(o.x,o.y);
-        ctx.lineTo(x1,y1);
-        ctx.stroke();
-
-        var arrow_div = 1.15;
-        var arrow_angle = 3;
-        // draw the first arrow half
-        ctx.beginPath();
-        ctx.translate(o.x, o.y);    // translate to rectangle center
-        ctx.moveTo((x1-o.x)/arrow_div,(y1-o.y)/arrow_div);
-        ctx.rotate((Math.PI / 180) * arrow_angle);  // rotate
-        ctx.moveTo((x1-o.x)/arrow_div,(y1-o.y)/arrow_div);
-        ctx.rotate((Math.PI / 180) * -arrow_angle);  // rotate
-        ctx.lineTo(x1-o.x,y1-o.y);
-        ctx.stroke();
-
-        // draw the second arrow half
-        ctx.beginPath();
-        ctx.moveTo((x1-o.x)/arrow_div,(y1-o.y)/arrow_div);
-        ctx.rotate((Math.PI / 180) * -arrow_angle);  // rotate
-        ctx.moveTo((x1-o.x)/arrow_div,(y1-o.y)/arrow_div);
-        ctx.rotate((Math.PI / 180) * arrow_angle);  // rotate
-        ctx.lineTo(x1-o.x,y1-o.y);
-        ctx.stroke();
-
-        ctx.restore();
-    }
-}
+leftBottomAxes.draw()
+leftTopAxes.draw()
+rightTopAxes.draw()
+rightBottomAxes.draw()
 
 // to calculate coordinates of the turned point
 // https://foxford.ru/wiki/informatika/povorot-tochki
-function calcCoordinatesOfTurnedPoint(curPointX, curPointY, oX, oY, degree){
+function calcCoordinatesOfTurnedPoint(oX, oY, curPointX, curPointY, degree){
     turnedPointX = oX + (curPointX-oX)*Math.cos(Math.PI/180*degree) - (curPointY-oY)*Math.sin(Math.PI/180*degree);
     turnedPointY = oY + (curPointX-oX)*Math.sin(Math.PI/180*degree) + (curPointY-oY)*Math.cos(Math.PI/180*degree);
     return {'x': turnedPointX, 'y': turnedPointY};
 }
 
-let initXOrange = o.x;
-let initYOrange = (o.y*0.25)/axisScale;
-console.log(`o.x:${o.x} o.y: ${o.y}`);
-console.log(`initXOrange:${initXOrange} initYOrange: ${initYOrange}`);
-let vectorOrange = new Vector(initXOrange,initYOrange);
-let initXGreen=calcCoordinatesOfTurnedPoint(initXOrange, initYOrange, o.x, o.y, 120)['x'];
-let initYGreen=calcCoordinatesOfTurnedPoint(initXOrange, initYOrange, o.x, o.y, 120)['y'];
-let vectorGreen = new Vector(initXGreen,initYGreen);
-let initXRed = calcCoordinatesOfTurnedPoint(initXOrange, initYOrange, o.x, o.y, -120)['x'];
-let initYRed = calcCoordinatesOfTurnedPoint(initXOrange, initYOrange, o.x, o.y, -120)['y'];
-let vectorRed = new Vector(initXRed,initYRed);
+
+let initXOrange1 = o1.x;
+let initYOrange1 = o1.y-canvas.width/4*axisScale;
+let vectorOrange1 = new Vector(o1.x, o1.y,initXOrange1,initYOrange1, 'orange');
+let initXGreen1=calcCoordinatesOfTurnedPoint(o1.x, o1.y, initXOrange1, initYOrange1, 120)['x'];
+let initYGreen1=calcCoordinatesOfTurnedPoint(o1.x, o1.y, initXOrange1, initYOrange1, 120)['y'];
+let vectorGreen1 = new Vector(o1.x, o1.y,initXGreen1,initYGreen1, 'green');
+let initXRed1 = calcCoordinatesOfTurnedPoint(o1.x, o1.y, initXOrange1, initYOrange1, -120)['x'];
+let initYRed1 = calcCoordinatesOfTurnedPoint(o1.x, o1.y, initXOrange1, initYOrange1, -120)['y'];
+let vectorRed1 = new Vector(o1.x, o1.y,initXRed1,initYRed1, 'red');
+
+let posSeq = new Sequence(vectorOrange1,vectorGreen1,vectorRed1,o1.x, o1.y);
+posSeq.drawSequence(initXOrange1,initYOrange1);
 
 
-// draw three 120-degrees shifted myLines 
-directSequence = {
-    draw: function(x1,y1,width){
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawAxes();
-        if (vectorGreen.isCaptured || vectorGreen.isLighted){
-            vectorGreen.draw(x1,y1,'green',width=width)
-            x2 = calcCoordinatesOfTurnedPoint(x1, y1, o.x, o.y, 120)['x'];
-            y2 = calcCoordinatesOfTurnedPoint(x1, y1, o.x, o.y, 120)['y'];
-            vectorRed.draw(x2,y2,'red',width=width)
-            x3 = calcCoordinatesOfTurnedPoint(x1, y1, o.x, o.y, -120)['x'];
-            y3 = calcCoordinatesOfTurnedPoint(x1, y1, o.x, o.y, -120)['y'];
-            vectorOrange.draw(x3,y3,'orange',width=width);
-            vectorGreen.xPrev = x1;
-            vectorGreen.yPrev = y1;
-            vectorRed.xPrev = calcCoordinatesOfTurnedPoint(x1, y1, o.x, o.y, 120)['x'];
-            vectorRed.yPrev = calcCoordinatesOfTurnedPoint(x1, y1, o.x, o.y, 120)['y'];
-            vectorOrange.xPrev = calcCoordinatesOfTurnedPoint(x1, y1, o.x, o.y, -120)['x'];
-            vectorOrange.yPrev = calcCoordinatesOfTurnedPoint(x1, y1, o.x, o.y, -120)['y'];
-        } else if (vectorRed.isCaptured || vectorRed.isLighted){
-            vectorRed.draw(x1,y1,'red',width=width)
-            x2 = calcCoordinatesOfTurnedPoint(x1, y1, o.x, o.y, 120)['x'];
-            y2 = calcCoordinatesOfTurnedPoint(x1, y1, o.x, o.y, 120)['y'];
-            vectorOrange.draw(x2,y2,'orange',width=width)
-            x3 = calcCoordinatesOfTurnedPoint(x1, y1, o.x, o.y, -120)['x'];
-            y3 = calcCoordinatesOfTurnedPoint(x1, y1, o.x, o.y, -120)['y'];
-            vectorGreen.draw(x3,y3,'green',width=width);
-            vectorRed.xPrev = x1;
-            vectorRed.yPrev = y1;
-            vectorOrange.xPrev = calcCoordinatesOfTurnedPoint(x1, y1, o.x, o.y, 120)['x'];
-            vectorOrange.yPrev = calcCoordinatesOfTurnedPoint(x1, y1, o.x, o.y, 120)['y'];
-            vectorGreen.xPrev = calcCoordinatesOfTurnedPoint(x1, y1, o.x, o.y, -120)['x'];
-            vectorGreen.yPrev = calcCoordinatesOfTurnedPoint(x1, y1, o.x, o.y, -120)['y'];
-        } else if (vectorOrange.isCaptured || vectorOrange.isLighted){
-            vectorOrange.draw(x1,y1,'orange',width=width)
-            x2 = calcCoordinatesOfTurnedPoint(x1, y1, o.x, o.y, 120)['x'];
-            y2 = calcCoordinatesOfTurnedPoint(x1, y1, o.x, o.y, 120)['y'];
-            vectorGreen.draw(x2,y2,'green',width=width)
-            x3 = calcCoordinatesOfTurnedPoint(x1, y1, o.x, o.y, -120)['x'];
-            y3 = calcCoordinatesOfTurnedPoint(x1, y1, o.x, o.y, -120)['y'];
-            vectorRed.draw(x3,y3,'red',width=width)
-            vectorOrange.xPrev = x1;
-            vectorOrange.yPrev = y1;
-            vectorGreen.xPrev = calcCoordinatesOfTurnedPoint(x1, y1, o.x, o.y, 120)['x'];
-            vectorGreen.yPrev = calcCoordinatesOfTurnedPoint(x1, y1, o.x, o.y, 120)['y'];
-            vectorRed.xPrev = calcCoordinatesOfTurnedPoint(x1, y1, o.x, o.y, -120)['x'];
-            vectorRed.yPrev = calcCoordinatesOfTurnedPoint(x1, y1, o.x, o.y, -120)['y'];
-        }
-    }
-}
+
+let initXOrange2 = o2.x;
+let initYOrange2 = o2.y-canvas.width/4*axisScale;
+let vectorOrange2 = new Vector(o2.x, o2.y,initXOrange2,initYOrange2, 'orange');
+let initXGreen2=calcCoordinatesOfTurnedPoint(o2.x, o2.y, initXOrange2, initYOrange2, 120)['x'];
+let initYGreen2=calcCoordinatesOfTurnedPoint(o2.x, o2.y, initXOrange2, initYOrange2, 120)['y'];
+let vectorGreen2 = new Vector(o2.x, o2.y,initXGreen2,initYGreen2, 'green');
+let initXRed2 = calcCoordinatesOfTurnedPoint(o2.x, o2.y, initXOrange2, initYOrange2, -120)['x'];
+let initYRed2 = calcCoordinatesOfTurnedPoint(o2.x, o2.y, initXOrange2, initYOrange2, -120)['y'];
+let vectorRed2 = new Vector(o2.x, o2.y,initXRed2,initYRed2, 'red');
+
+let phaseVectors = new Sequence(vectorOrange2,vectorGreen2,vectorRed2,o2.x, o2.y);
+phaseVectors.drawPhaseVectors(initXOrange2,initYOrange2);
+
+let initXOrange3 = o3.x;
+let initYOrange3 = o3.y-canvas.width/4*axisScale;
+let vectorOrange3 = new Vector(o3.x, o3.y,initXOrange3,initYOrange3, 'orange');
+let initXGreen3=calcCoordinatesOfTurnedPoint(o3.x, o3.y, initXOrange3, initYOrange3, -120)['x'];
+let initYGreen3=calcCoordinatesOfTurnedPoint(o3.x, o3.y, initXOrange3, initYOrange3, -120)['y'];
+let vectorGreen3 = new Vector(o3.x, o3.y,initXGreen3,initYGreen3, 'green');
+let initXRed3 = calcCoordinatesOfTurnedPoint(o3.x, o3.y, initXOrange3, initYOrange3, 120)['x'];
+let initYRed3 = calcCoordinatesOfTurnedPoint(o3.x, o3.y, initXOrange3, initYOrange3, 120)['y'];
+let vectorRed3 = new Vector(o3.x, o3.y,initXRed3,initYRed3, 'red');
+
+let negSeq = new Sequence(vectorOrange3,vectorRed3,vectorGreen3,o3.x, o3.y);
+negSeq.drawSequence(initXOrange3,initYOrange3);
+
+
+let initXOrange4 = o4.x;
+let initYOrange4 = o4.y-canvas.width/4*axisScale;
+let vectorOrange4 = new Vector(o4.x, o4.y,initXOrange4,initYOrange4, 'orange');
+let vectorGreen4 = new Vector(o4.x, o4.y,initXOrange4,initYOrange4, 'green');
+let vectorRed4 = new Vector(o4.x, o4.y,initXOrange4,initYOrange4, 'red');
+
+let zeroSeq = new Sequence(vectorOrange4,vectorGreen4,vectorRed4,o4.x, o4.y);
+zeroSeq.drawZeroSequence(initXOrange4,initYOrange4);
+
+
 
 canvas.onmousedown = function(event){
     var x = event.offsetX;
     var y = event.offsetY;
-   
-    if (vectorOrange.clickDistance(x,y)<25){
-        vectorOrange.isCaptured = true;
-    } else if (vectorGreen.clickDistance(x,y)<25){
-        vectorGreen.isCaptured = true;
-    } else if (vectorRed.clickDistance(x,y)<25){
-        vectorRed.isCaptured = true;
+
+    if (vectorOrange1.clickDistance(x,y)<25){
+        vectorOrange1.isCaptured = true;
+    }
+    else if (vectorOrange2.clickDistance(x,y)<25){
+        vectorOrange2.isCaptured = true;
+    }
+    else if (vectorGreen2.clickDistance(x,y)<25){
+        vectorGreen2.isCaptured = true;
+    }
+    else if (vectorRed2.clickDistance(x,y)<25){
+        vectorRed2.isCaptured = true;
+    }
+    else if (vectorOrange3.clickDistance(x,y)<25){
+        vectorOrange3.isCaptured = true;
+    }
+    else if (vectorOrange4.clickDistance(x,y)<25){
+        vectorOrange4.isCaptured = true;
     }
 }
 
 canvas.onmousemove = function(event){
     var x = event.offsetX;
     var y = event.offsetY;
-    
-    // drawing directSequence if any vector is captured onmousedown and moved
-    if (vectorOrange.isCaptured){
-        directSequence.draw(x,y,4);
-        console.log(`orange capture`);
-    } else if (vectorGreen.isCaptured) {
-        directSequence.draw(x,y,4);
-        console.log(`green capture`);
-    } else if (vectorRed.isCaptured){
-        directSequence.draw(x,y,4);
-        console.log(`red capture`);
-    } else {
-        // drawing directSequence if any vector is captured onmousemove
-        if (vectorOrange.clickDistance(x,y)<25){
-            vectorOrange.isLighted = true;
-            directSequence.draw(vectorOrange.xPrev,vectorOrange.yPrev,4);
-        }
-        else{
-            if(vectorOrange.isLighted){
-                directSequence.draw(vectorOrange.xPrev,vectorOrange.yPrev);
-            }
-            vectorOrange.isLighted = false;
-        }
-        if (vectorGreen.clickDistance(x,y)<25){
-            vectorGreen.isLighted = true;
-            directSequence.draw(vectorGreen.xPrev,vectorGreen.yPrev,4);
-        }  
-        else{
-            if (vectorGreen.isLighted){
-                directSequence.draw(vectorGreen.xPrev,vectorGreen.yPrev);
-            }
-            vectorGreen.isLighted = false;
-        } 
 
-        if (vectorRed.clickDistance(x,y)<25){
-            vectorRed.isLighted = true;
-            directSequence.draw(vectorRed.xPrev,vectorRed.yPrev,4);
-        }
-        else {
-            if (vectorRed.isLighted){
-                directSequence.draw(vectorRed.xPrev,vectorRed.yPrev);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        leftBottomAxes.draw();
+        leftTopAxes.draw();
+        rightTopAxes.draw();
+        rightBottomAxes.draw();
+
+            // drawing directSequence if any vector is captured onmousedown and moved
+            if (vectorOrange1.isCaptured){
+                posSeq.drawSequence(x,y,5);
+            } else {
+                // drawing directSequence if any vector is captured onmousemove
+                if (vectorOrange1.clickDistance(x,y)<25){
+                    posSeq.drawSequence(vectorOrange1.xPrev,vectorOrange1.yPrev,5);
+                }
+                else{
+                    posSeq.drawSequence(vectorOrange1.xPrev,vectorOrange1.yPrev);
+                }
             }
-            vectorRed.isLighted = false;
-        }
-    }
-    document.getElementById("Va").value = vectorOrange.radius();
-    document.getElementById("Vb").value = vectorGreen.radius();
-    document.getElementById("Vc").value = vectorRed.radius();
-    document.getElementById("FIa").value = vectorOrange.xPrev;
-    document.getElementById("FIb").value = vectorOrange.xPrev;
-    document.getElementById("FIc").value = vectorOrange.xPrev;
+            
+            // drawing directSequence if any vector is captured onmousedown and moved
+            if (vectorOrange2.isCaptured){
+                phaseVectors.drawPhaseVectors(x,y,5);
+            } else if (vectorGreen2.isCaptured){
+                phaseVectors.drawPhaseVectors(x,y,5);
+            } else if (vectorRed2.isCaptured){
+                phaseVectors.drawPhaseVectors(x,y,5);
+            }
+            else {
+                if (vectorOrange2.clickDistance(x,y)<25 || vectorGreen2.clickDistance(x,y)<25 || vectorRed2.clickDistance(x,y)<25){
+                    phaseVectors.drawPhaseVectors(vectorOrange2.xPrev,vectorOrange2.yPrev,5);
+                }
+                else{
+                    phaseVectors.drawPhaseVectors(vectorOrange2.xPrev,vectorOrange2.yPrev);
+                }
+            }
+
+            // drawing directSequence if any vector is captured onmousedown and moved
+            if (vectorOrange3.isCaptured){
+                negSeq.drawSequence(x,y,5);
+            } else {
+                // drawing directSequence if any vector is captured onmousemove
+                if (vectorOrange3.clickDistance(x,y)<25){
+                    negSeq.drawSequence(vectorOrange3.xPrev,vectorOrange3.yPrev,5);
+                }
+                else{
+                    negSeq.drawSequence(vectorOrange3.xPrev,vectorOrange3.yPrev);
+                }
+
+            }
+            
+            // drawing directSequence if any vector is captured onmousedown and moved
+            if (vectorOrange4.isCaptured){
+                zeroSeq.drawZeroSequence(x,y,5);
+            } else {
+                // drawing directSequence if any vector is captured onmousemove
+                if (vectorOrange4.clickDistance(x,y)<25){
+                    zeroSeq.drawZeroSequence(vectorOrange4.xPrev,vectorOrange4.yPrev,5);
+                }
+                else{
+                    zeroSeq.drawZeroSequence(vectorOrange4.xPrev,vectorOrange4.yPrev);
+                }
+            }
+        
+		
+    document.getElementById("Va").value = vectorOrange2.radius();
+    document.getElementById("Vb").value = vectorGreen2.radius();
+    document.getElementById("Vc").value = vectorRed2.radius();
+    document.getElementById("FIa").value = vectorOrange2.angle();
+    document.getElementById("FIb").value = vectorGreen2.angle();
+    document.getElementById("FIc").value = vectorRed2.angle();
 }
 
 canvas.onmouseup = function(event){
-    vectorRed.isCaptured = vectorGreen.isCaptured = vectorOrange.isCaptured = false;
+    vectorRed1.isCaptured = vectorGreen1.isCaptured = vectorOrange1.isCaptured = false;
+    vectorRed2.isCaptured = vectorGreen2.isCaptured = vectorOrange2.isCaptured = false;
+    vectorRed3.isCaptured = vectorGreen3.isCaptured = vectorOrange3.isCaptured = false;
+    vectorRed4.isCaptured = vectorGreen4.isCaptured = vectorOrange4.isCaptured = false;
+
 }
 
 canvas.onmouseout = function(event){
-    vectorRed.isCaptured = vectorGreen.isCaptured = vectorOrange.isCaptured = false;
+    vectorRed1.isCaptured = vectorGreen1.isCaptured = vectorOrange1.isCaptured = false;
+    vectorRed2.isCaptured = vectorGreen2.isCaptured = vectorOrange2.isCaptured = false;
+    vectorRed3.isCaptured = vectorGreen3.isCaptured = vectorOrange3.isCaptured = false;
+    vectorRed4.isCaptured = vectorGreen4.isCaptured = vectorOrange4.isCaptured = false;
 }
 
-vectorOrange.isCaptured = true;
-directSequence.draw(initXOrange,initYOrange);
-vectorOrange.isCaptured = false;
+// init html input fields
+document.getElementById("Va").value = vectorOrange2.radius();
+document.getElementById("Vb").value = vectorGreen2.radius();
+document.getElementById("Vc").value = vectorRed2.radius();
+document.getElementById("FIa").value = vectorOrange2.angle();
+document.getElementById("FIb").value = vectorGreen2.angle();
+document.getElementById("FIc").value = vectorRed2.angle();
 
-// init fields
-document.getElementById("Va").value = vectorOrange.radius();
-document.getElementById("Vb").value = vectorGreen.radius();
-document.getElementById("Vc").value = vectorRed.radius();
-document.getElementById("FIa").value = vectorOrange.xPrev;
-document.getElementById("FIb").value = vectorOrange.xPrev;
-document.getElementById("FIc").value = vectorOrange.xPrev;
+////////////////////////////////////////////////////////////////////////
+
+// var z1=new Complex(186.5,16.67);
+// var z2=new Complex(13.5,16.67);
+// var z3=new Complex(100,-33.33);
+
+// radius1=z1.mod();
+// radius2=z2.mod();
+// radius3=z3.mod();
+// console.log(radius1, radius2, radius3);
+
+// angle1 = z1.arg();//*180/Math.PI;
+// angle2 = z2.arg();//*180/Math.PI;
+// angle3 = z3.arg();//*180/Math.PI;
+// console.log(angle1, angle2, angle3);
+
+// x1 = radius1*Math.cos(angle1);
+// y1 = radius1*Math.sin(angle1);
+// console.log(x1, y1);
+
+
+// to get complex EA1,EA2,EA0 from radius and angle(degrees)
+function getComplex_eA1_eA2_eA0(eA,eB,eC,a,b,c){
+
+    let fiA=a*Math.PI/180;
+    let fiB=b*Math.PI/180;
+    let fiC=c*Math.PI/180;
+    let fi120=120*Math.PI/180; 
+    let fi240=240*Math.PI/180; 
+
+    let eA1RealPart = (eA*Math.cos(fiA)+eB*Math.cos(fiB+fi120)+eC*Math.cos(fiC+fi240))/3;
+    let eA1ImaginaryPart = (eA*Math.sin(fiA)+eB*Math.sin(fiB+fi120)+eC*Math.sin(fiC+fi240))/3;
+
+    let eA2RealPart = (eA*Math.cos(fiA)+eB*Math.cos(fiB+fi240)+eC*Math.cos(fiC+fi120))/3;
+    let eA2ImaginaryPart = (eA*Math.sin(fiA)+eB*Math.sin(fiB+fi240)+eC*Math.sin(fiC+fi120))/3;
+
+    let eA0RealPart = (eA*Math.cos(fiA)+eB*Math.cos(fiB)+eC*Math.cos(fiC))/3;
+    let eA0ImaginaryPart = (eA*Math.sin(fiA)+eB*Math.sin(fiB)+eC*Math.sin(fiC))/3;
+
+    return {'eA1RealPart': eA1RealPart, 'eA1ImaginaryPart': eA1ImaginaryPart,
+            'eA2RealPart': eA2RealPart, 'eA2ImaginaryPart': eA2ImaginaryPart,
+            'eA0RealPart': eA0RealPart, 'eA0ImaginaryPart': eA0ImaginaryPart};
+
+}
+
+console.log(getComplex_eA1_eA2_eA0(300,200,100,0,-90,90));
