@@ -10,6 +10,29 @@ function calcCoordinatesOfTurnedPoint(oX, oY, curPointX, curPointY, degree){
     return {'x': turnedPointX, 'y': turnedPointY};
 }
 
+// to get complex EA1,EA2,EA0 from radius and angle(degrees)
+function getComplex_eA1_eA2_eA0(eA,eB,eC,a,b,c){
+
+    let fiA=a*Math.PI/180;
+    let fiB=b*Math.PI/180;
+    let fiC=c*Math.PI/180;
+    let fi120=120*Math.PI/180; 
+    let fi240=240*Math.PI/180; 
+
+    let eA1RealPart = (eA*Math.cos(fiA)+eB*Math.cos(fiB+fi120)+eC*Math.cos(fiC+fi240))/3;
+    let eA1ImaginaryPart = (eA*Math.sin(fiA)+eB*Math.sin(fiB+fi120)+eC*Math.sin(fiC+fi240))/3;
+
+    let eA2RealPart = (eA*Math.cos(fiA)+eB*Math.cos(fiB+fi240)+eC*Math.cos(fiC+fi120))/3;
+    let eA2ImaginaryPart = (eA*Math.sin(fiA)+eB*Math.sin(fiB+fi240)+eC*Math.sin(fiC+fi120))/3;
+
+    let eA0RealPart = (eA*Math.cos(fiA)+eB*Math.cos(fiB)+eC*Math.cos(fiC))/3;
+    let eA0ImaginaryPart = (eA*Math.sin(fiA)+eB*Math.sin(fiB)+eC*Math.sin(fiC))/3;
+
+    return {'eA1RealPart': eA1RealPart, 'eA1ImaginaryPart': eA1ImaginaryPart,
+            'eA2RealPart': eA2RealPart, 'eA2ImaginaryPart': eA2ImaginaryPart,
+            'eA0RealPart': eA0RealPart, 'eA0ImaginaryPart': eA0ImaginaryPart};
+}
+
 
 axisScale = 0.8;    // to set scale of the canvas
 arc_count=4;        // to set a number of arcs
@@ -48,11 +71,6 @@ let vB = 140;
 let fiB = -90;
 let vC = 100;
 let fiC = 90;
-
-let vectorOrange2 = new Vector(o2.x, o2.y, 'orange');
-let vectorGreen2 = new Vector(o2.x, o2.y, 'green');
-let vectorRed2 = new Vector(o2.x, o2.y,'red');
-
 document.getElementById("Va").value = vA;
 document.getElementById("FIa").value = fiA;
 document.getElementById("Vb").value = vB;
@@ -60,13 +78,28 @@ document.getElementById("FIb").value = fiB;
 document.getElementById("Vc").value = vC;
 document.getElementById("FIc").value = fiC;
 
+
+// to init and draw Phase Vectors
+let vectorOrange2 = new Vector(o2.x, o2.y, 'orange');
+let vectorGreen2 = new Vector(o2.x, o2.y, 'green');
+let vectorRed2 = new Vector(o2.x, o2.y,'red');
 vectorOrange2.drawZFi(vA,fiA,3);
 vectorGreen2.drawZFi(vB,fiB,3);
 vectorRed2.drawZFi(vC,fiC);
 
-let phaseVectors = new Sequence(vectorOrange2,vectorGreen2,vectorRed2,o2.x, o2.y);
-//phaseVectors.drawPhaseVectors(100,100);
-
+// to init and draw positive sequence vectors based on Phase Vectors
+let vectorOrange1 = new Vector(o1.x, o1.y, 'orange');
+let vectorGreen1 = new Vector(o1.x, o1.y, 'green');
+let vectorRed1 = new Vector(o1.x, o1.y,'red');
+let A1RealPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA1RealPart;
+let A1ImaginaryPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA1ImaginaryPart;
+let B1RealPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, -120)['x'];
+let B1ImaginaryPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, -120)['y'];
+let C1RealPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, 120)['x'];
+let C1ImaginaryPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, 120)['y'];
+vectorOrange1.drawXY(A1RealPart,A1ImaginaryPart);
+vectorGreen1.drawXY(B1RealPart,B1ImaginaryPart);
+vectorRed1.drawXY(C1RealPart,C1ImaginaryPart);
 
 function eventForm(value) {
 	vA = document.getElementById("Va").value;
@@ -86,6 +119,18 @@ function eventForm(value) {
 	vectorOrange2.drawZFi(vA,fiA,3);
 	vectorGreen2.drawZFi(vB,fiB,3);
 	vectorRed2.drawZFi(vC,fiC,3);
+
+    // to draw positive sequence vectors based on Phase Vectors
+    let A1RealPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA1RealPart;
+    let A1ImaginaryPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA1ImaginaryPart;
+    let B1RealPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, -120)['x'];
+    let B1ImaginaryPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, -120)['y'];
+    let C1RealPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, 120)['x'];
+    let C1ImaginaryPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, 120)['y'];
+    vectorOrange1.drawXY(A1RealPart,A1ImaginaryPart);
+    vectorGreen1.drawXY(B1RealPart,B1ImaginaryPart);
+    vectorRed1.drawXY(C1RealPart,C1ImaginaryPart);
+    
 }
 
 
@@ -120,24 +165,43 @@ canvas.onmousemove = function(event){
 	// drawing directSequence if any vector is captured onmousedown and moved
 	if (vectorOrange2.isCaptured){
 		vectorOrange2.drawXYCanvas(x,y,5);
-	}
-	else {
+        vectorGreen2.drawXY(vectorGreen2.xPrev,vectorGreen2.yPrev, 5);
+        vectorRed2.drawXY(vectorRed2.xPrev,vectorRed2.yPrev,5);
+	} else if (vectorGreen2.isCaptured){
+        vectorOrange2.drawXY(vectorOrange2.xPrev,vectorOrange2.yPrev,5);
+		vectorGreen2.drawXYCanvas(x,y,5);
+        vectorRed2.drawXY(vectorRed2.xPrev,vectorRed2.yPrev,5);
+	} else if (vectorRed2.isCaptured){
+        vectorOrange2.drawXY(vectorOrange2.xPrev,vectorOrange2.yPrev,5);
+        vectorGreen2.drawXY(vectorGreen2.xPrev,vectorGreen2.yPrev,5);
+		vectorRed2.drawXYCanvas(x,y,5);
+	} else if (vectorOrange2.clickDistance(x,y)<25||vectorGreen2.clickDistance(x,y)<25||vectorRed2.clickDistance(x,y)<25){
+        vectorOrange2.drawXY(vectorOrange2.xPrev,vectorOrange2.yPrev,5);
+        vectorGreen2.drawXY(vectorGreen2.xPrev,vectorGreen2.yPrev,5);
+        vectorRed2.drawXY(vectorRed2.xPrev,vectorRed2.yPrev,5);
+    } else {
         vectorOrange2.drawXY(vectorOrange2.xPrev,vectorOrange2.yPrev);
+        vectorGreen2.drawXY(vectorGreen2.xPrev,vectorGreen2.yPrev);
+        vectorRed2.drawXY(vectorRed2.xPrev,vectorRed2.yPrev);
     }
+
     document.getElementById("Va").value = vectorOrange2.radius();
     document.getElementById("FIa").value = vectorOrange2.angle();
+    document.getElementById("Vb").value = vectorGreen2.radius();
+    document.getElementById("FIb").value = vectorGreen2.angle();
+    document.getElementById("Vc").value = vectorRed2.radius();
+    document.getElementById("FIc").value = vectorRed2.angle();
 }
 
 canvas.onmouseup = function(event){
     vectorRed2.isCaptured = vectorGreen2.isCaptured = vectorOrange2.isCaptured = false;
-
 }
-/*
+
 canvas.onmouseout = function(event){
-
+    vectorRed2.isCaptured = vectorGreen2.isCaptured = vectorOrange2.isCaptured = false;
 }
 
-*/
+
 
 //vectorOrange1.drawXY(100,100,3);
 //vectorGreen1.drawZFi(200,60,3);

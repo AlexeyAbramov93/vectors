@@ -146,7 +146,7 @@ class Vector {
     }	
 	
     radius() {  // to calculate distance from center to vector point
-        return ((this.xPrev)**2 + (this.yPrev)**2)**0.5;///(canvas.width/4)/axisScale).toFixed(2);
+        return (((this.xPrev)**2 + (this.yPrev)**2)**0.5).toFixed(2);///(canvas.width/4)/axisScale).toFixed(2);
     }
 	
     angle() {

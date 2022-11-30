@@ -65,22 +65,22 @@ class Sequence {
     drawPhaseVectors (x1,y1, width=3){ // to draw vector from center to point(x1,y1)
 
         if (this.baseVector.isCaptured /*|| this.baseVector.isLighted*/){
-            this.baseVector.drawXYCanvas(x1,y1,width=width);
+            this.baseVector.drawXY(x1,y1,width=width);
             this.baseVector.xPrev = x1;
             this.baseVector.yPrev = y1;
         } else if(this.nextVector.isCaptured /*|| this.nextVector.isLighted*/) {
-            this.nextVector.drawXYCanvas(x1,y1,width=width);
+            this.nextVector.drawXY(x1,y1,width=width);
             this.nextVector.xPrev = x1;
             this.nextVector.yPrev = y1;
         } else if(this.prevVector.isCaptured /*|| this.prevVector.isLighted*/) {
-            this.prevVector.drawXYCanvas(x1,y1,width=width);
+            this.prevVector.drawXY(x1,y1,width=width);
             this.prevVector.xPrev = x1;
             this.prevVector.yPrev = y1;
         }
 
-        this.baseVector.drawXYCanvas(this.baseVector.xPrev,this.baseVector.yPrev,width=width);
-        this.nextVector.drawXYCanvas(this.nextVector.xPrev,this.nextVector.yPrev,width=width);
-        this.prevVector.drawXYCanvas(this.prevVector.xPrev,this.prevVector.yPrev,width=width);
+        this.baseVector.drawXY(this.baseVector.xPrev,this.baseVector.yPrev,width=width);
+        this.nextVector.drawXY(this.nextVector.xPrev,this.nextVector.yPrev,width=width);
+        this.prevVector.drawXY(this.prevVector.xPrev,this.prevVector.yPrev,width=width);
         
     }
 }
