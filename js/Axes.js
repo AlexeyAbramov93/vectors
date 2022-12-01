@@ -3,12 +3,20 @@ class Axes {
     x0;
     y0;
 
-    constructor(x0, y0) {
+    title;
+
+    constructor(x0, y0, title) {
         this.x0 = x0;
         this.y0 = y0;
-      }
+        this.title = title;
+    }
 
-    draw(width=0.3){    // to draw axes from the point (x0,y0)      
+    draw(width=0.3){    // to draw axes from the point (x0,y0)  
+
+        ctx.font = "16px serif"; 
+        ctx.textAlign = "center";
+        ctx.fillText(this.title, this.x0, this.y0-canvas.height/4.4);
+
         ctx.save();
         ctx.lineWidth = width;
         ctx.strokeStyle = 'black';

@@ -55,10 +55,12 @@ o4 = {
     y: canvas.height*0.75,
 }
 
-leftBottomAxes = new Axes(o3.x,o3.y);
-leftTopAxes = new Axes(o2.x,o2.y);
-rightTopAxes = new Axes(o1.x,o1.y);
-rightBottomAxes = new Axes(o4.x,o4.y);
+
+
+leftBottomAxes = new Axes(o3.x,o3.y,'Обратная последовательность');
+leftTopAxes = new Axes(o2.x,o2.y,'Фазные вектора');
+rightTopAxes = new Axes(o1.x,o1.y,'Прямая последовательность');
+rightBottomAxes = new Axes(o4.x,o4.y,'Нулевая последовательность');
 
 leftBottomAxes.draw()
 leftTopAxes.draw()
@@ -100,6 +102,13 @@ let C1ImaginaryPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPa
 vectorOrange1.drawXY(A1RealPart,A1ImaginaryPart);
 vectorGreen1.drawXY(B1RealPart,B1ImaginaryPart);
 vectorRed1.drawXY(C1RealPart,C1ImaginaryPart);
+document.getElementById("V1").value = vectorOrange1.radius();
+document.getElementById("FI1").value = vectorOrange1.angle();
+document.getElementById("V2").value = '---';
+document.getElementById("FI2").value = '---';
+document.getElementById("V3").value = '---';
+document.getElementById("FI3").value = '---';
+
 
 function eventForm(value) {
 	vA = document.getElementById("Va").value;
@@ -121,12 +130,12 @@ function eventForm(value) {
 	vectorRed2.drawZFi(vC,fiC,3);
 
     // to draw positive sequence vectors based on Phase Vectors
-    let A1RealPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA1RealPart;
-    let A1ImaginaryPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA1ImaginaryPart;
-    let B1RealPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, -120)['x'];
-    let B1ImaginaryPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, -120)['y'];
-    let C1RealPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, 120)['x'];
-    let C1ImaginaryPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, 120)['y'];
+    A1RealPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA1RealPart;
+    A1ImaginaryPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA1ImaginaryPart;
+    B1RealPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, -120)['x'];
+    B1ImaginaryPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, -120)['y'];
+    C1RealPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, 120)['x'];
+    C1ImaginaryPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, 120)['y'];
     vectorOrange1.drawXY(A1RealPart,A1ImaginaryPart);
     vectorGreen1.drawXY(B1RealPart,B1ImaginaryPart);
     vectorRed1.drawXY(C1RealPart,C1ImaginaryPart);
@@ -162,7 +171,7 @@ canvas.onmousemove = function(event){
 	rightTopAxes.draw();
 	rightBottomAxes.draw();
 		
-	// drawing directSequence if any vector is captured onmousedown and moved
+	// drawing Phase Vectors
 	if (vectorOrange2.isCaptured){
 		vectorOrange2.drawXYCanvas(x,y,5);
         vectorGreen2.drawXY(vectorGreen2.xPrev,vectorGreen2.yPrev, 5);
@@ -185,12 +194,41 @@ canvas.onmousemove = function(event){
         vectorRed2.drawXY(vectorRed2.xPrev,vectorRed2.yPrev);
     }
 
+
+
+    let vA = vectorOrange2.radius();
+    let fiA = vectorOrange2.angle();
+    let vB = vectorGreen2.radius();
+    let fiB = vectorGreen2.angle();
+    let vC = vectorRed2.radius();
+    let fiC = vectorRed2.angle();
+    // тут надо будет поправить
     document.getElementById("Va").value = vectorOrange2.radius();
     document.getElementById("FIa").value = vectorOrange2.angle();
     document.getElementById("Vb").value = vectorGreen2.radius();
     document.getElementById("FIb").value = vectorGreen2.angle();
     document.getElementById("Vc").value = vectorRed2.radius();
     document.getElementById("FIc").value = vectorRed2.angle();
+
+
+    // to draw positive sequence vectors based on Phase Vectors
+    A1RealPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA1RealPart;
+    A1ImaginaryPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA1ImaginaryPart;
+    B1RealPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, -120)['x'];
+    B1ImaginaryPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, -120)['y'];
+    C1RealPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, 120)['x'];
+    C1ImaginaryPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, 120)['y'];
+    vectorOrange1.drawXY(A1RealPart,A1ImaginaryPart);
+    vectorGreen1.drawXY(B1RealPart,B1ImaginaryPart);
+    vectorRed1.drawXY(C1RealPart,C1ImaginaryPart);
+    document.getElementById("V1").value = vectorOrange1.radius();
+    document.getElementById("FI1").value = vectorOrange1.angle();
+    document.getElementById("V2").value = '---';
+    document.getElementById("FI2").value = '---';
+    document.getElementById("V3").value = '---';
+    document.getElementById("FI3").value = '---';
+
+
 }
 
 canvas.onmouseup = function(event){
@@ -200,86 +238,3 @@ canvas.onmouseup = function(event){
 canvas.onmouseout = function(event){
     vectorRed2.isCaptured = vectorGreen2.isCaptured = vectorOrange2.isCaptured = false;
 }
-
-
-
-//vectorOrange1.drawXY(100,100,3);
-//vectorGreen1.drawZFi(200,60,3);
-//vectorGreen1.drawXY(200,60,3);
-
-//let radius1 = (x**2+y**2)**0.5 ;
-//console.log(radius1);
-
-
-
-
-/*
-
-
-
-let initXOrange1 = o1.x;
-let initYOrange1 = o1.y-canvas.width/4*axisScale;
-let vectorOrange1 = new Vector(o1.x, o1.y,initXOrange1,initYOrange1, 'orange');
-let initXGreen1=calcCoordinatesOfTurnedPoint(o1.x, o1.y, initXOrange1, initYOrange1, 120)['x'];
-let initYGreen1=calcCoordinatesOfTurnedPoint(o1.x, o1.y, initXOrange1, initYOrange1, 120)['y'];
-let vectorGreen1 = new Vector(o1.x, o1.y,initXGreen1,initYGreen1, 'green');
-let initXRed1 = calcCoordinatesOfTurnedPoint(o1.x, o1.y, initXOrange1, initYOrange1, -120)['x'];
-let initYRed1 = calcCoordinatesOfTurnedPoint(o1.x, o1.y, initXOrange1, initYOrange1, -120)['y'];
-let vectorRed1 = new Vector(o1.x, o1.y,initXRed1,initYRed1, 'red');
-
-let posSeq = new Sequence(vectorOrange1,vectorGreen1,vectorRed1,o1.x, o1.y);
-posSeq.drawSequence(initXOrange1,initYOrange1);
-
-
-
-let initXOrange2 = o2.x;
-let initYOrange2 = o2.y-canvas.width/4*axisScale;
-let vectorOrange2 = new Vector(o2.x, o2.y,initXOrange2,initYOrange2, 'orange');
-let initXGreen2=calcCoordinatesOfTurnedPoint(o2.x, o2.y, initXOrange2, initYOrange2, 120)['x'];
-let initYGreen2=calcCoordinatesOfTurnedPoint(o2.x, o2.y, initXOrange2, initYOrange2, 120)['y'];
-let vectorGreen2 = new Vector(o2.x, o2.y,initXGreen2,initYGreen2, 'green');
-let initXRed2 = calcCoordinatesOfTurnedPoint(o2.x, o2.y, initXOrange2, initYOrange2, -120)['x'];
-let initYRed2 = calcCoordinatesOfTurnedPoint(o2.x, o2.y, initXOrange2, initYOrange2, -120)['y'];
-let vectorRed2 = new Vector(o2.x, o2.y,initXRed2,initYRed2, 'red');
-
-let phaseVectors = new Sequence(vectorOrange2,vectorGreen2,vectorRed2,o2.x, o2.y);
-phaseVectors.drawPhaseVectors(initXOrange2,initYOrange2);
-
-
-let initXOrange3 = o3.x;
-let initYOrange3 = o3.y-canvas.width/4*axisScale;
-let vectorOrange3 = new Vector(o3.x, o3.y,initXOrange3,initYOrange3, 'orange');
-let initXGreen3=calcCoordinatesOfTurnedPoint(o3.x, o3.y, initXOrange3, initYOrange3, -120)['x'];
-let initYGreen3=calcCoordinatesOfTurnedPoint(o3.x, o3.y, initXOrange3, initYOrange3, -120)['y'];
-let vectorGreen3 = new Vector(o3.x, o3.y,initXGreen3,initYGreen3, 'green');
-let initXRed3 = calcCoordinatesOfTurnedPoint(o3.x, o3.y, initXOrange3, initYOrange3, 120)['x'];
-let initYRed3 = calcCoordinatesOfTurnedPoint(o3.x, o3.y, initXOrange3, initYOrange3, 120)['y'];
-let vectorRed3 = new Vector(o3.x, o3.y,initXRed3,initYRed3, 'red');
-
-let negSeq = new Sequence(vectorOrange3,vectorRed3,vectorGreen3,o3.x, o3.y);
-negSeq.drawSequence(initXOrange3,initYOrange3);
-
-
-let initXOrange4 = o4.x;
-let initYOrange4 = o4.y-canvas.width/4*axisScale;
-let vectorOrange4 = new Vector(o4.x, o4.y,initXOrange4,initYOrange4, 'orange');
-let vectorGreen4 = new Vector(o4.x, o4.y,initXOrange4,initYOrange4, 'green');
-let vectorRed4 = new Vector(o4.x, o4.y,initXOrange4,initYOrange4, 'red');
-
-let zeroSeq = new Sequence(vectorOrange4,vectorGreen4,vectorRed4,o4.x, o4.y);
-zeroSeq.drawZeroSequence(initXOrange4,initYOrange4);
-
-*/
-
-
-
-
-
-// init html input fields
-//document.getElementById("Va").value = vectorOrange1.radius();
-//document.getElementById("Vb").value = vectorGreen1.radius();
-//document.getElementById("Vc").value = vectorRed1.radius();
-//document.getElementById("FIa").value = vectorOrange1.xPrev;
-//document.getElementById("FIb").value = vectorOrange1.xPrev;
-//document.getElementById("FIc").value = vectorOrange1.xPrev;
-
