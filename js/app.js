@@ -1,7 +1,6 @@
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 
-
 // to calculate coordinates of the turned point
 // https://foxford.ru/wiki/informatika/povorot-tochki
 function calcCoordinatesOfTurnedPoint(oX, oY, curPointX, curPointY, degree){
@@ -33,6 +32,160 @@ function getComplex_eA1_eA2_eA0(eA,eB,eC,a,b,c){
             'eA0RealPart': eA0RealPart, 'eA0ImaginaryPart': eA0ImaginaryPart};
 }
 
+// to calculate and draw Phase Vectors (vA,vB.vC) based on complex vA1,vA2,vB1,vB2,vC1,vC2,vA0
+function getComplex_eA_eB_eC_old(vA1,vA2,vB1,vB2,vC1,vC2,vA0){
+
+    let vV0x = vA0.xPrev;
+    let vV0y = vA0.yPrev;
+
+    let vA1x = vA1.xPrev;
+    let vA1y = vA1.yPrev;
+    let vA2x = vA2.xPrev;
+    let vA2y = vA2.yPrev;
+
+    let vB1x = vB1.xPrev;
+    let vB1y = vB1.yPrev;
+    let vB2x = vB2.xPrev;
+    let vB2y = vB2.yPrev;
+
+    let vC1x = vC1.xPrev;
+    let vC1y = vC1.yPrev;
+    let vC2x = vC2.xPrev;
+    let vC2y = vC2.yPrev;
+
+    let vAx = vA1x+vA2x+vV0x;
+    let vAy = vA1y+vA2y+vV0y;
+    let vBx = vB1x+vB2x+vV0x;
+    let vBy = vB1y+vB2y+vV0y;
+    let vCx = vC1x+vC2x+vV0x;
+    let vCy = vC1y+vC2y+vV0y;
+
+    vectorOrange2.drawXY(vAx,vAy);
+    vectorGreen2.drawXY(vBx,vBy);
+    vectorRed2.drawXY(vCx,vCy);
+}
+
+// to calculate and draw Phase Vectors (vA,vB.vC) based on complex vA1,vA2,vA0
+function getComplex_eA_eB_eC(vA1,vA2,vA0){
+
+    let vV0x = vA0.xPrev;
+    let vV0y = vA0.yPrev;
+
+    let vA1x = vA1.xPrev;
+    let vA1y = vA1.yPrev;
+    let vB1x = calcCoordinatesOfTurnedPoint(0, 0, vA1x, vA1y, -120)['x'];
+    let vB1y = calcCoordinatesOfTurnedPoint(0, 0, vA1x, vA1y, -120)['y'];
+    let vC1x = calcCoordinatesOfTurnedPoint(0, 0, vA1x, vA1y, 120)['x'];
+    let vC1y = calcCoordinatesOfTurnedPoint(0, 0, vA1x, vA1y, 120)['y'];
+
+    let vA2x = vA2.xPrev;
+    let vA2y = vA2.yPrev;
+    let vB2x = calcCoordinatesOfTurnedPoint(0, 0, vA2x, vA2y, 120)['x'];
+    let vB2y = calcCoordinatesOfTurnedPoint(0, 0, vA2x, vA2y, 120)['y'];
+    let vC2x = calcCoordinatesOfTurnedPoint(0, 0, vA2x, vA2y, -120)['x'];
+    let vC2y = calcCoordinatesOfTurnedPoint(0, 0, vA2x, vA2y, -120)['y'];
+
+    let vAx = vA1x+vA2x+vV0x;
+    let vAy = vA1y+vA2y+vV0y;
+    let vBx = vB1x+vB2x+vV0x;
+    let vBy = vB1y+vB2y+vV0y;
+    let vCx = vC1x+vC2x+vV0x;
+    let vCy = vC1y+vC2y+vV0y;
+
+    vectorOrange2.drawXY(vAx,vAy);
+    vectorGreen2.drawXY(vBx,vBy);
+    vectorRed2.drawXY(vCx,vCy);
+}
+
+// to calculate and draw Phase Vectors (vA,vB.vC) based on complex vA1,vA2,vA0
+function getComplex_eA_eB_eC_test(vA1x,vA1y,vA2x,vA2y,vV0x,vV0y){
+
+    let vB1x = calcCoordinatesOfTurnedPoint(0, 0, vA1x, vA1y, -120)['x'];
+    let vB1y = calcCoordinatesOfTurnedPoint(0, 0, vA1x, vA1y, -120)['y'];
+    let vC1x = calcCoordinatesOfTurnedPoint(0, 0, vA1x, vA1y, 120)['x'];
+    let vC1y = calcCoordinatesOfTurnedPoint(0, 0, vA1x, vA1y, 120)['y'];
+
+    let vB2x = calcCoordinatesOfTurnedPoint(0, 0, vA2x, vA2y, 120)['x'];
+    let vB2y = calcCoordinatesOfTurnedPoint(0, 0, vA2x, vA2y, 120)['y'];
+    let vC2x = calcCoordinatesOfTurnedPoint(0, 0, vA2x, vA2y, -120)['x'];
+    let vC2y = calcCoordinatesOfTurnedPoint(0, 0, vA2x, vA2y, -120)['y'];
+
+    let vAx = vA1x+vA2x+vV0x;
+    let vAy = vA1y+vA2y+vV0y;
+    let vBx = vB1x+vB2x+vV0x;
+    let vBy = vB1y+vB2y+vV0y;
+    let vCx = vC1x+vC2x+vV0x;
+    let vCy = vC1y+vC2y+vV0y;
+
+    vectorOrange2.drawXY(vAx,vAy);
+    vectorGreen2.drawXY(vBx,vBy);
+    vectorRed2.drawXY(vCx,vCy);
+}
+
+// to calculate and draw Positive Sequence (A1,B1.C1) based on complex A1
+function drawPositiveSeq(vA,vB,vC,fiA,fiB,fiC){
+    let A1RealPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA1RealPart;
+    let A1ImaginaryPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA1ImaginaryPart;
+    let B1RealPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, -120)['x'];
+    let B1ImaginaryPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, -120)['y'];
+    let C1RealPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, 120)['x'];
+    let C1ImaginaryPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, 120)['y'];
+    vectorOrange1.drawXY(A1RealPart,A1ImaginaryPart);
+    vectorGreen1.drawXY(B1RealPart,B1ImaginaryPart);
+    vectorRed1.drawXY(C1RealPart,C1ImaginaryPart);
+}
+
+// to calculate and draw Negative Sequence (A2,B2.C2) based on complex A2
+function drawNegativeSeq(vA,vB,vC,fiA,fiB,fiC){
+    let A2RealPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA2RealPart;
+    let A2ImaginaryPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA2ImaginaryPart;
+    let B2RealPart=calcCoordinatesOfTurnedPoint(0, 0, A2RealPart, A2ImaginaryPart, 120)['x'];
+    let B2ImaginaryPart=calcCoordinatesOfTurnedPoint(0, 0, A2RealPart, A2ImaginaryPart, 120)['y'];
+    let C2RealPart=calcCoordinatesOfTurnedPoint(0, 0, A2RealPart, A2ImaginaryPart, -120)['x'];
+    let C2ImaginaryPart=calcCoordinatesOfTurnedPoint(0, 0, A2RealPart, A2ImaginaryPart, -120)['y'];
+    vectorOrange3.drawXY(A2RealPart,A2ImaginaryPart);
+    vectorGreen3.drawXY(B2RealPart,B2ImaginaryPart);
+    vectorRed3.drawXY(C2RealPart,C2ImaginaryPart);
+}
+
+// to calculate and draw Zero Sequence (A2,B2.C2) based on complex A2
+function drawZeroSeq(vA,vB,vC,fiA,fiB,fiC){
+    let A0RealPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA0RealPart;
+    let A0ImaginaryPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA0ImaginaryPart;
+    //console.log(A0RealPart,A0ImaginaryPart);
+    vectorOrange4.drawXY(A0RealPart,A0ImaginaryPart);
+    vectorGreen4.drawXY(A0RealPart,A0ImaginaryPart);
+    vectorRed4.drawXY(A0RealPart,A0ImaginaryPart);
+}
+
+// to calculate and draw Positive Sequence (A1,B1.C1) based on A1 Canvas (x,y)
+function drawPositiveSeqXYCanvas(x,y){
+    let x2 = calcCoordinatesOfTurnedPoint(vectorOrange1.x0, vectorOrange1.y0, x, y, 120)['x'];
+    let y2 = calcCoordinatesOfTurnedPoint(vectorOrange1.x0, vectorOrange1.y0, x, y, 120)['y'];
+    let x3 = calcCoordinatesOfTurnedPoint(vectorOrange1.x0, vectorOrange1.y0, x, y, -120)['x'];
+    let y3 = calcCoordinatesOfTurnedPoint(vectorOrange1.x0, vectorOrange1.y0, x, y, -120)['y'];
+    vectorOrange1.drawXYCanvas(x,y);
+    vectorGreen1.drawXYCanvas(x2,y2);
+    vectorRed1.drawXYCanvas(x3,y3);
+}
+
+// to calculate and draw Negative Sequence (A2,B2.C2) based on A2 Canvas (x,y)
+function drawNegativeSeqXYCanvas(x,y){
+    let x2 = calcCoordinatesOfTurnedPoint(vectorOrange3.x0, vectorOrange3.y0, x, y, -120)['x'];
+    let y2 = calcCoordinatesOfTurnedPoint(vectorOrange3.x0, vectorOrange3.y0, x, y, -120)['y'];
+    let x3 = calcCoordinatesOfTurnedPoint(vectorOrange3.x0, vectorOrange3.y0, x, y, 120)['x'];
+    let y3 = calcCoordinatesOfTurnedPoint(vectorOrange3.x0, vectorOrange3.y0, x, y, 120)['y'];
+    vectorOrange3.drawXYCanvas(x,y);
+    vectorGreen3.drawXYCanvas(x2,y2);
+    vectorRed3.drawXYCanvas(x3,y3);
+}
+
+// to calculate and draw Zero Sequence (A2,B2.C2) based on complex A2
+function drawZeroSeqXYCanvas(x,y){
+    vectorOrange4.drawXYCanvas(x,y);
+    vectorGreen4.drawXYCanvas(x,y);
+    vectorRed4.drawXYCanvas(x,y);
+}
 
 axisScale = 0.8;    // to set scale of the canvas
 arc_count=4;        // to set a number of arcs
@@ -73,6 +226,7 @@ let vB = 140;
 let fiB = -90;
 let vC = 100;
 let fiC = 90;
+
 document.getElementById("Va").value = vA;
 document.getElementById("FIa").value = fiA;
 document.getElementById("Vb").value = vB;
@@ -81,36 +235,55 @@ document.getElementById("Vc").value = vC;
 document.getElementById("FIc").value = fiC;
 
 
-// to init and draw Phase Vectors
+// to init Phase Vectors
 let vectorOrange2 = new Vector(o2.x, o2.y, 'orange');
 let vectorGreen2 = new Vector(o2.x, o2.y, 'green');
 let vectorRed2 = new Vector(o2.x, o2.y,'red');
-vectorOrange2.drawZFi(vA,fiA,3);
-vectorGreen2.drawZFi(vB,fiB,3);
-vectorRed2.drawZFi(vC,fiC);
 
-// to init and draw positive sequence vectors based on Phase Vectors
+vectorOrange2.drawZFi(vA,fiA,3); // to draw Phase Vector A
+vectorGreen2.drawZFi(vB,fiB,3); // to draw Phase Vector B
+vectorRed2.drawZFi(vC,fiC); // to draw Phase Vector C
+
+// to init Positive Sequence vectors based on Phase Vectors
 let vectorOrange1 = new Vector(o1.x, o1.y, 'orange');
 let vectorGreen1 = new Vector(o1.x, o1.y, 'green');
 let vectorRed1 = new Vector(o1.x, o1.y,'red');
-let A1RealPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA1RealPart;
-let A1ImaginaryPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA1ImaginaryPart;
-let B1RealPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, -120)['x'];
-let B1ImaginaryPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, -120)['y'];
-let C1RealPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, 120)['x'];
-let C1ImaginaryPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, 120)['y'];
-vectorOrange1.drawXY(A1RealPart,A1ImaginaryPart);
-vectorGreen1.drawXY(B1RealPart,B1ImaginaryPart);
-vectorRed1.drawXY(C1RealPart,C1ImaginaryPart);
+drawPositiveSeq(vA,vB,vC,fiA,fiB,fiC); // to draw Positive Sequence vectors based on Phase Vectors
+
+// to init Negative Sequence vectors based on Phase Vectors
+let vectorOrange3 = new Vector(o3.x, o3.y, 'orange');
+let vectorGreen3 = new Vector(o3.x, o3.y, 'green');
+let vectorRed3 = new Vector(o3.x, o3.y,'red');
+drawNegativeSeq(vA,vB,vC,fiA,fiB,fiC); // to draw Negative Sequence vectors based on Phase Vectors
+
+// to init Zero Sequence vectors based on Phase Vectors
+let vectorOrange4 = new Vector(o4.x, o4.y, 'orange');
+let vectorGreen4 = new Vector(o4.x, o4.y, 'green');
+let vectorRed4 = new Vector(o4.x, o4.y,'red');
+drawZeroSeq(vA,vB,vC,fiA,fiB,fiC); // to draw Zero Sequence vectors based on Phase Vectors
+
 document.getElementById("V1").value = vectorOrange1.radius();
 document.getElementById("FI1").value = vectorOrange1.angle();
-document.getElementById("V2").value = '---';
-document.getElementById("FI2").value = '---';
-document.getElementById("V3").value = '---';
-document.getElementById("FI3").value = '---';
+document.getElementById("V2").value = vectorOrange3.radius();
+document.getElementById("FI2").value = vectorOrange3.angle();
+document.getElementById("V0").value = vectorOrange4.radius();
+document.getElementById("FI0").value = vectorOrange4.angle();
+
+
+// to init Phase Vectors
+let vectorOrange5 = new Vector(o2.x+20, o2.y+20, 'blue');
+let vectorGreen5 = new Vector(o2.x+20, o2.y+20, 'blue');
+let vectorRed5 = new Vector(o2.x+20, o2.y+20,'blue');
 
 
 function eventForm(value) {
+
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	leftBottomAxes.draw();
+	leftTopAxes.draw();
+	rightTopAxes.draw();
+	rightBottomAxes.draw();
+
 	vA = document.getElementById("Va").value;
 	fiA = document.getElementById("FIa").value;
 	vB = document.getElementById("Vb").value;
@@ -118,28 +291,30 @@ function eventForm(value) {
 	vC = document.getElementById("Vc").value;
 	fiC = document.getElementById("FIc").value;
 	
-	
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	leftBottomAxes.draw();
-	leftTopAxes.draw();
-	rightTopAxes.draw();
-	rightBottomAxes.draw();
-	
 	vectorOrange2.drawZFi(vA,fiA,3);
 	vectorGreen2.drawZFi(vB,fiB,3);
 	vectorRed2.drawZFi(vC,fiC,3);
 
-    // to draw positive sequence vectors based on Phase Vectors
-    A1RealPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA1RealPart;
-    A1ImaginaryPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA1ImaginaryPart;
-    B1RealPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, -120)['x'];
-    B1ImaginaryPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, -120)['y'];
-    C1RealPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, 120)['x'];
-    C1ImaginaryPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, 120)['y'];
-    vectorOrange1.drawXY(A1RealPart,A1ImaginaryPart);
-    vectorGreen1.drawXY(B1RealPart,B1ImaginaryPart);
-    vectorRed1.drawXY(C1RealPart,C1ImaginaryPart);
+    drawPositiveSeq(vA,vB,vC,fiA,fiB,fiC); // to draw Positive Sequence vectors based on Phase Vectors
+    drawNegativeSeq(vA,vB,vC,fiA,fiB,fiC); // to draw Negative Sequence vectors based on Phase Vectors
+    drawZeroSeq(vA,vB,vC,fiA,fiB,fiC); // to draw Negative Sequence vectors based on Phase Vectors
+
+	// v1 = document.getElementById("V1").value;
+	// fi1 = document.getElementById("FI1").value;
+	// v2 = document.getElementById("V2").value;
+	// fi2 = document.getElementById("FI2").value;
+	// v0 = document.getElementById("V0").value;
+	// fi0 = document.getElementById("FI0").value;
     
+    // let v1X = v1*Math.cos(fi1*Math.PI/180);
+    // let v1Y = v1*Math.sin(fi1*Math.PI/180);
+    // let v2X = v2*Math.cos(fi2*Math.PI/180);
+    // let v2Y = v2*Math.sin(fi2*Math.PI/180);
+    // let v0X = v0*Math.cos(fi0*Math.PI/180);
+    // let v0Y = v0*Math.sin(fi0*Math.PI/180);
+
+    // getComplex_eA_eB_eC_test(v1X,v1Y,v2X,v2Y,v0X,v0Y);
+
 }
 
 
@@ -158,6 +333,18 @@ canvas.onmousedown = function(event){
     else if (vectorRed2.clickDistance(x,y)<25){
         vectorRed2.isCaptured = true;
         console.log(`vectorRed2:${vectorRed2.isCaptured}`)
+    }
+    else if (vectorOrange1.clickDistance(x,y)<25){
+        vectorOrange1.isCaptured = true;
+        console.log(`vectorOrange1:${vectorOrange1.isCaptured}`)
+    }
+    else if (vectorOrange3.clickDistance(x,y)<25){
+        vectorOrange3.isCaptured = true;
+        console.log(`vectorOrange3:${vectorOrange3.isCaptured}`)
+    }
+    else if (vectorOrange4.clickDistance(x,y)<25){
+        vectorOrange4.isCaptured = true;
+        console.log(`vectorOrange4:${vectorOrange4.isCaptured}`)
     }
 }
 
@@ -188,13 +375,26 @@ canvas.onmousemove = function(event){
         vectorOrange2.drawXY(vectorOrange2.xPrev,vectorOrange2.yPrev,5);
         vectorGreen2.drawXY(vectorGreen2.xPrev,vectorGreen2.yPrev,5);
         vectorRed2.drawXY(vectorRed2.xPrev,vectorRed2.yPrev,5);
+
+	} else if (vectorOrange1.isCaptured){
+        drawPositiveSeqXYCanvas(x,y);
+        //getComplex_eA_eB_eC_old(vectorOrange1,vectorOrange3,vectorGreen1,vectorGreen3,vectorRed1,vectorRed3,vectorOrange4);
+        getComplex_eA_eB_eC(vectorOrange1,vectorOrange3,vectorOrange4);
+
+    } else if (vectorOrange3.isCaptured){
+        drawNegativeSeqXYCanvas(x,y);
+        //getComplex_eA_eB_eC_old(vectorOrange1,vectorOrange3,vectorGreen1,vectorGreen3,vectorRed1,vectorRed3,vectorOrange4);
+        getComplex_eA_eB_eC(vectorOrange1,vectorOrange3,vectorOrange4);
+
+    } else if (vectorOrange4.isCaptured){
+        drawZeroSeqXYCanvas(x,y);
+        //getComplex_eA_eB_eC_old(vectorOrange1,vectorOrange3,vectorGreen1,vectorGreen3,vectorRed1,vectorRed3,vectorOrange4);
+        getComplex_eA_eB_eC(vectorOrange1,vectorOrange3,vectorOrange4);    
     } else {
         vectorOrange2.drawXY(vectorOrange2.xPrev,vectorOrange2.yPrev);
         vectorGreen2.drawXY(vectorGreen2.xPrev,vectorGreen2.yPrev);
         vectorRed2.drawXY(vectorRed2.xPrev,vectorRed2.yPrev);
     }
-
-
 
     let vA = vectorOrange2.radius();
     let fiA = vectorOrange2.angle();
@@ -202,6 +402,12 @@ canvas.onmousemove = function(event){
     let fiB = vectorGreen2.angle();
     let vC = vectorRed2.radius();
     let fiC = vectorRed2.angle();
+
+    drawPositiveSeq(vA,vB,vC,fiA,fiB,fiC); // to draw Positive Sequence vectors based on Phase Vectors
+    drawNegativeSeq(vA,vB,vC,fiA,fiB,fiC); // to draw Negative Sequence vectors based on Phase Vectors
+    drawZeroSeq(vA,vB,vC,fiA,fiB,fiC); // to draw Negative Sequence vectors based on Phase Vectors
+
+
     // тут надо будет поправить
     document.getElementById("Va").value = vectorOrange2.radius();
     document.getElementById("FIa").value = vectorOrange2.angle();
@@ -210,31 +416,28 @@ canvas.onmousemove = function(event){
     document.getElementById("Vc").value = vectorRed2.radius();
     document.getElementById("FIc").value = vectorRed2.angle();
 
-
-    // to draw positive sequence vectors based on Phase Vectors
-    A1RealPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA1RealPart;
-    A1ImaginaryPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA1ImaginaryPart;
-    B1RealPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, -120)['x'];
-    B1ImaginaryPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, -120)['y'];
-    C1RealPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, 120)['x'];
-    C1ImaginaryPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, 120)['y'];
-    vectorOrange1.drawXY(A1RealPart,A1ImaginaryPart);
-    vectorGreen1.drawXY(B1RealPart,B1ImaginaryPart);
-    vectorRed1.drawXY(C1RealPart,C1ImaginaryPart);
     document.getElementById("V1").value = vectorOrange1.radius();
     document.getElementById("FI1").value = vectorOrange1.angle();
-    document.getElementById("V2").value = '---';
-    document.getElementById("FI2").value = '---';
-    document.getElementById("V3").value = '---';
-    document.getElementById("FI3").value = '---';
+    document.getElementById("V2").value = vectorOrange3.radius();
+    document.getElementById("FI2").value = vectorOrange3.angle();
+    document.getElementById("V0").value = vectorOrange4.radius();
+    document.getElementById("FI0").value = vectorOrange4.angle();
+
 
 
 }
 
 canvas.onmouseup = function(event){
+    vectorRed1.isCaptured = vectorGreen1.isCaptured = vectorOrange1.isCaptured = false;
     vectorRed2.isCaptured = vectorGreen2.isCaptured = vectorOrange2.isCaptured = false;
+    vectorRed3.isCaptured = vectorGreen3.isCaptured = vectorOrange3.isCaptured = false;
+    vectorRed4.isCaptured = vectorGreen4.isCaptured = vectorOrange4.isCaptured = false;
+
 }
 
 canvas.onmouseout = function(event){
+    vectorRed1.isCaptured = vectorGreen1.isCaptured = vectorOrange1.isCaptured = false;
     vectorRed2.isCaptured = vectorGreen2.isCaptured = vectorOrange2.isCaptured = false;
+    vectorRed3.isCaptured = vectorGreen3.isCaptured = vectorOrange3.isCaptured = false;
+    vectorRed4.isCaptured = vectorGreen4.isCaptured = vectorOrange4.isCaptured = false;
 }
