@@ -27,21 +27,7 @@ class Vector {
 
     }
 
-    drawZFi (z,fi,width=3){ // to draw vector from center to point(x1,y1)
-	
-		// против часовой на 90
-		//let tmpX1 = x1;
-		//let tmpY1 = y1;
-		//x1 = this.x0 - (this.y0-tmpY1);
-		//y1 = this.y0-(tmpX1-this.x0);
-
-		// по часовой на 90
-		//let tmpX1 = x1;
-		//let tmpY1 = y1;
-		//x1 = this.x0 + (this.y0-tmpY1);
-		//y1 = this.y0 + (tmpX1-this.x0);
-		
-		
+    drawZFi (z,fi,width=3){ // to draw vector from center to point(x1,y1)		
 		let x = z*Math.cos(fi*Math.PI/180);
 		let y = z*Math.sin(fi*Math.PI/180);
 		let xCanvas = x + this.x0;
@@ -58,16 +44,14 @@ class Vector {
         ctx.beginPath();
         ctx.moveTo(this.x0,this.y0);
         ctx.lineTo(xCanvasTurned,yCanvasTurned);
-        ctx.stroke();
-		
+		ctx.stroke();
+
 		this.xPrev=x;
 		this.yPrev=y;
 		this.xPrevCanvas=xCanvas;
 		this.yPrevCanvas=yCanvas;
 		this.xPrevCanvasTurned=xCanvasTurned;
 		this.yPrevCanvasTurned=yCanvasTurned;
-
-
     }
 	
 	
@@ -95,19 +79,7 @@ class Vector {
 	
 	
     drawXY (x,y,width=3){ // to draw vector from center to point(x1,y1)
-		
-		// против часовой на 90
-		//let tmpX1 = x1;
-		//let tmpY1 = y1;
-		//x1 = this.x0 - (this.y0-tmpY1);
-		//y1 = this.y0-(tmpX1-this.x0);
-
-		// по часовой на 90
-		//let tmpX1 = x1;
-		//let tmpY1 = y1;
-		//x1 = this.x0 + (this.y0-tmpY1);
-		//y1 = this.y0 + (tmpX1-this.x0);
-		
+				
 		let xCanvas = x + this.x0;
 		let yCanvas = this.y0 - y;
 
@@ -134,14 +106,6 @@ class Vector {
     }
 	
     clickDistance(x,y) { // to calculate distance from click point to vector point
-		// против часовой на 90
-		//let tmpX = x;
-		//let tmpY = y;
-		
-		//x = this.x0 - (this.y0-tmpY);
-		//y = this.y0-(tmpX-this.x0);
-		//let tmpXPrev = this.x0 - (this.y0-this.yPrev);
-		//let tmpYPrev = this.y0-(this.xPrev-this.x0);
         return ((this.xPrevCanvasTurned-x)**2+(this.yPrevCanvasTurned-y)**2)**0.5;
     }	
 	
