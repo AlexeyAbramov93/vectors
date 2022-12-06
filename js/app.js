@@ -10,26 +10,26 @@ function calcCoordinatesOfTurnedPoint(oX, oY, curPointX, curPointY, degree){
 }
 
 // to get complex EA1,EA2,EA0 from radius and angle(degrees)
-function getComplex_eA1_eA2_eA0(eA,eB,eC,a,b,c){
+function getComplex_eA1_eA2_eA0(vA,fiA,vB,fiB,vC,fiC){
 
-    let fiA=a*Math.PI/180;
-    let fiB=b*Math.PI/180;
-    let fiC=c*Math.PI/180;
-    let fi120=120*Math.PI/180; 
-    let fi240=240*Math.PI/180; 
+    let fiArad=fiA*Math.PI/180;
+    let fiBrad=fiB*Math.PI/180;
+    let fiCrad=fiC*Math.PI/180;
+    let fi120rad=120*Math.PI/180; 
+    let fi240rad=240*Math.PI/180; 
+    
+    let A1x = (vA*Math.cos(fiArad)+vB*Math.cos(fiBrad+fi120rad)+vC*Math.cos(fiCrad+fi240rad))/3;
+    let A1y = (vA*Math.sin(fiArad)+vB*Math.sin(fiBrad+fi120rad)+vC*Math.sin(fiCrad+fi240rad))/3;
 
-    let eA1RealPart = (eA*Math.cos(fiA)+eB*Math.cos(fiB+fi120)+eC*Math.cos(fiC+fi240))/3;
-    let eA1ImaginaryPart = (eA*Math.sin(fiA)+eB*Math.sin(fiB+fi120)+eC*Math.sin(fiC+fi240))/3;
+    let A2x = (vA*Math.cos(fiArad)+vB*Math.cos(fiBrad+fi240rad)+vC*Math.cos(fiCrad+fi120rad))/3;
+    let A2y = (vA*Math.sin(fiArad)+vB*Math.sin(fiBrad+fi240rad)+vC*Math.sin(fiCrad+fi120rad))/3;
 
-    let eA2RealPart = (eA*Math.cos(fiA)+eB*Math.cos(fiB+fi240)+eC*Math.cos(fiC+fi120))/3;
-    let eA2ImaginaryPart = (eA*Math.sin(fiA)+eB*Math.sin(fiB+fi240)+eC*Math.sin(fiC+fi120))/3;
+    let A0x = (vA*Math.cos(fiArad)+vB*Math.cos(fiBrad)+vC*Math.cos(fiCrad))/3;
+    let A0y = (vA*Math.sin(fiArad)+vB*Math.sin(fiBrad)+vC*Math.sin(fiCrad))/3;
 
-    let eA0RealPart = (eA*Math.cos(fiA)+eB*Math.cos(fiB)+eC*Math.cos(fiC))/3;
-    let eA0ImaginaryPart = (eA*Math.sin(fiA)+eB*Math.sin(fiB)+eC*Math.sin(fiC))/3;
-
-    return {'eA1RealPart': eA1RealPart, 'eA1ImaginaryPart': eA1ImaginaryPart,
-            'eA2RealPart': eA2RealPart, 'eA2ImaginaryPart': eA2ImaginaryPart,
-            'eA0RealPart': eA0RealPart, 'eA0ImaginaryPart': eA0ImaginaryPart};
+    return {'A1x': A1x, 'A1y': A1y,
+            'A2x': A2x, 'A2y': A2y,
+            'A0x': A0x, 'A0y': A0y};
 }
 
 // to calculate and draw Phase Vectors (vA,vB.vC) based on complex vA1,vA2,vB1,vB2,vC1,vC2,vA0
@@ -120,12 +120,81 @@ function getComplex_eA_eB_eC_test(vA1x,vA1y,vA2x,vA2y,vV0x,vV0y){
     vectorOrange2.drawXY(vAx,vAy);
     vectorGreen2.drawXY(vBx,vBy);
     vectorRed2.drawXY(vCx,vCy);
+
+    vA = vectorOrange2.radius();
+    fiA = vectorOrange2.angle();
+    vB = vectorGreen2.radius();
+    fiB = vectorGreen2.angle();
+    vC = vectorRed2.radius();
+    fiC = vectorRed2.angle();
+}
+/////////////////////////////////////////////////////////////////////////
+
+// to draw Phase Vectors based on vA,fiA,vB,fiB,vC,fiC
+function drawPhaseVectorsByABC(vA,fiA,vB,fiB,vC,fiC){
+    let Ax = vA*Math.cos(fiA*Math.PI/180);
+    let Ay = vA*Math.sin(fiA*Math.PI/180);
+    let Bx = vB*Math.cos(fiB*Math.PI/180);
+    let By = vB*Math.sin(fiB*Math.PI/180);
+    let Cx = vC*Math.cos(fiC*Math.PI/180);
+    let Cy = vC*Math.sin(fiC*Math.PI/180);
+
+    vectorOrange2.drawXY(Ax,Ay);
+    vectorGreen2.drawXY(Bx,By);
+    vectorRed2.drawXY(Cx,Cy);
+
+    vA = vectorOrange2.radius();
+    fiA = vectorOrange2.angle();
+    vB = vectorGreen2.radius();
+    fiB = vectorGreen2.angle();
+    vC = vectorRed2.radius();
+    fiC = vectorRed2.angle();
 }
 
-// to calculate and draw Positive Sequence (A1,B1.C1) based on complex A1
-function drawPositiveSeq(vA,vB,vC,fiA,fiB,fiC){
-    let A1RealPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA1RealPart;
-    let A1ImaginaryPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA1ImaginaryPart;
+// to draw Phase Vectors based on Positive, Negative and Zero swquencies
+function drawPhaseVectorsByA1A2A0(v1,fi1,v2,fi2,v0,fi0){
+    let A1x = v1*Math.cos(fi1*Math.PI/180);
+    let A1y = v1*Math.sin(fi1*Math.PI/180);
+    let A2x = v2*Math.cos(fi2*Math.PI/180);
+    let A2y = v2*Math.sin(fi2*Math.PI/180);
+    let V0x = v0*Math.cos(fi0*Math.PI/180);
+    let V0y = v0*Math.sin(fi0*Math.PI/180);
+    let B1x = calcCoordinatesOfTurnedPoint(0, 0, A1x, A1y, -120)['x'];
+    let B1y = calcCoordinatesOfTurnedPoint(0, 0, A1x, A1y, -120)['y'];
+    let C1x = calcCoordinatesOfTurnedPoint(0, 0, A1x, A1y, 120)['x'];
+    let C1y = calcCoordinatesOfTurnedPoint(0, 0, A1x, A1y, 120)['y'];
+
+    let B2x = calcCoordinatesOfTurnedPoint(0, 0, A2x, A2y, 120)['x'];
+    let B2y = calcCoordinatesOfTurnedPoint(0, 0, A2x, A2y, 120)['y'];
+    let C2x = calcCoordinatesOfTurnedPoint(0, 0, A2x, A2y, -120)['x'];
+    let C2y = calcCoordinatesOfTurnedPoint(0, 0, A2x, A2y, -120)['y'];
+
+    Ax = A1x+A2x+V0x;
+    Ay = A1y+A2y+V0y;
+    Bx = B1x+B2x+V0x;
+    By = B1y+B2y+V0y;
+    Cx = C1x+C2x+V0x;
+    Cy = C1y+C2y+V0y;
+
+    vectorOrange2.drawXY(Ax,Ay);
+    vectorGreen2.drawXY(Bx,By);
+    vectorRed2.drawXY(Cx,Cy);
+
+    vA = vectorOrange2.radius();
+    fiA = vectorOrange2.angle();
+    vB = vectorGreen2.radius();
+    fiB = vectorGreen2.angle();
+    vC = vectorRed2.radius();
+    fiC = vectorRed2.angle();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+// to calculate and draw Positive Sequence (A1,B1,C1) based on complex A1
+function drawPositiveSeq(vA,fiA,vB,fiB,vC,fiC){
+    let A1RealPart = getComplex_eA1_eA2_eA0(vA,fiA,vB,fiB,vC,fiC).A1x;
+    let A1ImaginaryPart = getComplex_eA1_eA2_eA0(vA,fiA,vB,fiB,vC,fiC).A1y;
     let B1RealPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, -120)['x'];
     let B1ImaginaryPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, -120)['y'];
     let C1RealPart=calcCoordinatesOfTurnedPoint(0, 0, A1RealPart, A1ImaginaryPart, 120)['x'];
@@ -135,10 +204,10 @@ function drawPositiveSeq(vA,vB,vC,fiA,fiB,fiC){
     vectorRed1.drawXY(C1RealPart,C1ImaginaryPart);
 }
 
-// to calculate and draw Negative Sequence (A2,B2.C2) based on complex A2
-function drawNegativeSeq(vA,vB,vC,fiA,fiB,fiC){
-    let A2RealPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA2RealPart;
-    let A2ImaginaryPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA2ImaginaryPart;
+// to calculate and draw Negative Sequence (A2,B2,C2) based on complex A2
+function drawNegativeSeq(vA,fiA,vB,fiB,vC,fiC){
+    let A2RealPart = getComplex_eA1_eA2_eA0(vA,fiA,vB,fiB,vC,fiC).A2x;
+    let A2ImaginaryPart = getComplex_eA1_eA2_eA0(vA,fiA,vB,fiB,vC,fiC).A2y;
     let B2RealPart=calcCoordinatesOfTurnedPoint(0, 0, A2RealPart, A2ImaginaryPart, 120)['x'];
     let B2ImaginaryPart=calcCoordinatesOfTurnedPoint(0, 0, A2RealPart, A2ImaginaryPart, 120)['y'];
     let C2RealPart=calcCoordinatesOfTurnedPoint(0, 0, A2RealPart, A2ImaginaryPart, -120)['x'];
@@ -148,17 +217,16 @@ function drawNegativeSeq(vA,vB,vC,fiA,fiB,fiC){
     vectorRed3.drawXY(C2RealPart,C2ImaginaryPart);
 }
 
-// to calculate and draw Zero Sequence (A2,B2.C2) based on complex A2
-function drawZeroSeq(vA,vB,vC,fiA,fiB,fiC){
-    let A0RealPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA0RealPart;
-    let A0ImaginaryPart = getComplex_eA1_eA2_eA0(vA,vB,vC,fiA,fiB,fiC).eA0ImaginaryPart;
-    //console.log(A0RealPart,A0ImaginaryPart);
+// to calculate and draw Zero Sequence (A0,B0,C0) based on complex A2
+function drawZeroSeq(vA,fiA,vB,fiB,vC,fiC){
+    let A0RealPart = getComplex_eA1_eA2_eA0(vA,fiA,vB,fiB,vC,fiC).A0x;
+    let A0ImaginaryPart = getComplex_eA1_eA2_eA0(vA,fiA,vB,fiB,vC,fiC).A0y;
     vectorOrange4.drawXY(A0RealPart,A0ImaginaryPart);
     vectorGreen4.drawXY(A0RealPart,A0ImaginaryPart);
     vectorRed4.drawXY(A0RealPart,A0ImaginaryPart);
 }
 
-// to calculate and draw Positive Sequence (A1,B1.C1) based on A1 Canvas (x,y)
+// to calculate and draw Positive Sequence (A1,B1,C1) based on A1 Canvas (x,y)
 function drawPositiveSeqXYCanvas(x,y){
     let x2 = calcCoordinatesOfTurnedPoint(vectorOrange1.x0, vectorOrange1.y0, x, y, 120)['x'];
     let y2 = calcCoordinatesOfTurnedPoint(vectorOrange1.x0, vectorOrange1.y0, x, y, 120)['y'];
@@ -169,7 +237,7 @@ function drawPositiveSeqXYCanvas(x,y){
     vectorRed1.drawXYCanvas(x3,y3);
 }
 
-// to calculate and draw Negative Sequence (A2,B2.C2) based on A2 Canvas (x,y)
+// to calculate and draw Negative Sequence (A2,B2,C2) based on A2 Canvas (x,y)
 function drawNegativeSeqXYCanvas(x,y){
     let x2 = calcCoordinatesOfTurnedPoint(vectorOrange3.x0, vectorOrange3.y0, x, y, -120)['x'];
     let y2 = calcCoordinatesOfTurnedPoint(vectorOrange3.x0, vectorOrange3.y0, x, y, -120)['y'];
@@ -180,7 +248,7 @@ function drawNegativeSeqXYCanvas(x,y){
     vectorRed3.drawXYCanvas(x3,y3);
 }
 
-// to calculate and draw Zero Sequence (A2,B2.C2) based on complex A2
+// to calculate and draw Zero Sequence (A0,B0,C0) based on complex A2
 function drawZeroSeqXYCanvas(x,y){
     vectorOrange4.drawXYCanvas(x,y);
     vectorGreen4.drawXYCanvas(x,y);
@@ -248,19 +316,19 @@ vectorRed2.drawZFi(vC,fiC); // to draw Phase Vector C
 let vectorOrange1 = new Vector(o1.x, o1.y, 'orange');
 let vectorGreen1 = new Vector(o1.x, o1.y, 'green');
 let vectorRed1 = new Vector(o1.x, o1.y,'red');
-drawPositiveSeq(vA,vB,vC,fiA,fiB,fiC); // to draw Positive Sequence vectors based on Phase Vectors
+drawPositiveSeq(vA,fiA,vB,fiB,vC,fiC); // to draw Positive Sequence vectors based on Phase Vectors
 
 // to init Negative Sequence vectors based on Phase Vectors
 let vectorOrange3 = new Vector(o3.x, o3.y, 'orange');
 let vectorGreen3 = new Vector(o3.x, o3.y, 'green');
 let vectorRed3 = new Vector(o3.x, o3.y,'red');
-drawNegativeSeq(vA,vB,vC,fiA,fiB,fiC); // to draw Negative Sequence vectors based on Phase Vectors
+drawNegativeSeq(vA,fiA,vB,fiB,vC,fiC); // to draw Negative Sequence vectors based on Phase Vectors
 
 // to init Zero Sequence vectors based on Phase Vectors
 let vectorOrange4 = new Vector(o4.x, o4.y, 'orange');
 let vectorGreen4 = new Vector(o4.x, o4.y, 'green');
 let vectorRed4 = new Vector(o4.x, o4.y,'red');
-drawZeroSeq(vA,vB,vC,fiA,fiB,fiC); // to draw Zero Sequence vectors based on Phase Vectors
+drawZeroSeq(vA,fiA,vB,fiB,vC,fiC); // to draw Zero Sequence vectors based on Phase Vectors
 
 document.getElementById("V1").value = vectorOrange1.radius();
 document.getElementById("FI1").value = vectorOrange1.angle();
@@ -269,14 +337,7 @@ document.getElementById("FI2").value = vectorOrange3.angle();
 document.getElementById("V0").value = vectorOrange4.radius();
 document.getElementById("FI0").value = vectorOrange4.angle();
 
-
-// to init Phase Vectors
-let vectorOrange5 = new Vector(o2.x+20, o2.y+20, 'blue');
-let vectorGreen5 = new Vector(o2.x+20, o2.y+20, 'blue');
-let vectorRed5 = new Vector(o2.x+20, o2.y+20,'blue');
-
-
-function eventForm(value) {
+function eventFormABC(value) {
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	leftBottomAxes.draw();
@@ -290,33 +351,48 @@ function eventForm(value) {
 	fiB = document.getElementById("FIb").value;
 	vC = document.getElementById("Vc").value;
 	fiC = document.getElementById("FIc").value;
-	
-	vectorOrange2.drawZFi(vA,fiA,3);
-	vectorGreen2.drawZFi(vB,fiB,3);
-	vectorRed2.drawZFi(vC,fiC,3);
 
-    drawPositiveSeq(vA,vB,vC,fiA,fiB,fiC); // to draw Positive Sequence vectors based on Phase Vectors
-    drawNegativeSeq(vA,vB,vC,fiA,fiB,fiC); // to draw Negative Sequence vectors based on Phase Vectors
-    drawZeroSeq(vA,vB,vC,fiA,fiB,fiC); // to draw Negative Sequence vectors based on Phase Vectors
+    drawPhaseVectorsByABC(vA,fiA,vB,fiB,vC,fiC);
+    drawPositiveSeq(vA,fiA,vB,fiB,vC,fiC);
+    drawNegativeSeq(vA,fiA,vB,fiB,vC,fiC);
+    drawZeroSeq(vA,fiA,vB,fiB,vC,fiC);
 
-	// v1 = document.getElementById("V1").value;
-	// fi1 = document.getElementById("FI1").value;
-	// v2 = document.getElementById("V2").value;
-	// fi2 = document.getElementById("FI2").value;
-	// v0 = document.getElementById("V0").value;
-	// fi0 = document.getElementById("FI0").value;
-    
-    // let v1X = v1*Math.cos(fi1*Math.PI/180);
-    // let v1Y = v1*Math.sin(fi1*Math.PI/180);
-    // let v2X = v2*Math.cos(fi2*Math.PI/180);
-    // let v2Y = v2*Math.sin(fi2*Math.PI/180);
-    // let v0X = v0*Math.cos(fi0*Math.PI/180);
-    // let v0Y = v0*Math.sin(fi0*Math.PI/180);
-
-    // getComplex_eA_eB_eC_test(v1X,v1Y,v2X,v2Y,v0X,v0Y);
+    document.getElementById("V1").value = vectorOrange1.radius();
+    document.getElementById("FI1").value = vectorOrange1.angle();
+    document.getElementById("V2").value = vectorOrange3.radius();
+    document.getElementById("FI2").value = vectorOrange3.angle();
+    document.getElementById("V0").value = vectorOrange4.radius();
+    document.getElementById("FI0").value = vectorOrange4.angle();
 
 }
 
+function eventFormA1A2A0(value) {
+
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	leftBottomAxes.draw();
+	leftTopAxes.draw();
+	rightTopAxes.draw();
+	rightBottomAxes.draw();
+
+	let v1 = document.getElementById("V1").value;
+	let fi1 = document.getElementById("FI1").value;
+	let v2 = document.getElementById("V2").value;
+	let fi2 = document.getElementById("FI2").value;
+	let v0 = document.getElementById("V0").value;
+	let fi0 = document.getElementById("FI0").value;
+
+    drawPhaseVectorsByA1A2A0(v1,fi1,v2,fi2,v0,fi0);
+    drawPositiveSeq(vA,fiA,vB,fiB,vC,fiC); // to draw Positive Sequence vectors based on Phase Vectors
+    drawNegativeSeq(vA,fiA,vB,fiB,vC,fiC); // to draw Negative Sequence vectors based on Phase Vectors
+    drawZeroSeq(vA,fiA,vB,fiB,vC,fiC); // to draw Negative Sequence vectors based on Phase Vectors
+
+    document.getElementById("Va").value = vectorOrange2.radius();
+    document.getElementById("FIa").value = vectorOrange2.angle();
+    document.getElementById("Vb").value = vectorGreen2.radius();
+    document.getElementById("FIb").value = vectorGreen2.angle();
+    document.getElementById("Vc").value = vectorRed2.radius();
+    document.getElementById("FIc").value = vectorRed2.angle();
+}
 
 canvas.onmousedown = function(event){
     var x = event.offsetX;
@@ -403,10 +479,9 @@ canvas.onmousemove = function(event){
     let vC = vectorRed2.radius();
     let fiC = vectorRed2.angle();
 
-    drawPositiveSeq(vA,vB,vC,fiA,fiB,fiC); // to draw Positive Sequence vectors based on Phase Vectors
-    drawNegativeSeq(vA,vB,vC,fiA,fiB,fiC); // to draw Negative Sequence vectors based on Phase Vectors
-    drawZeroSeq(vA,vB,vC,fiA,fiB,fiC); // to draw Negative Sequence vectors based on Phase Vectors
-
+    drawPositiveSeq(vA,fiA,vB,fiB,vC,fiC); // to draw Positive Sequence vectors based on Phase Vectors
+    drawNegativeSeq(vA,fiA,vB,fiB,vC,fiC); // to draw Negative Sequence vectors based on Phase Vectors
+    drawZeroSeq(vA,fiA,vB,fiB,vC,fiC); // to draw Negative Sequence vectors based on Phase Vectors
 
     // тут надо будет поправить
     document.getElementById("Va").value = vectorOrange2.radius();
@@ -422,9 +497,6 @@ canvas.onmousemove = function(event){
     document.getElementById("FI2").value = vectorOrange3.angle();
     document.getElementById("V0").value = vectorOrange4.radius();
     document.getElementById("FI0").value = vectorOrange4.angle();
-
-
-
 }
 
 canvas.onmouseup = function(event){
@@ -440,4 +512,7 @@ canvas.onmouseout = function(event){
     vectorRed2.isCaptured = vectorGreen2.isCaptured = vectorOrange2.isCaptured = false;
     vectorRed3.isCaptured = vectorGreen3.isCaptured = vectorOrange3.isCaptured = false;
     vectorRed4.isCaptured = vectorGreen4.isCaptured = vectorOrange4.isCaptured = false;
+
+
+
 }
