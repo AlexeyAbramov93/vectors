@@ -30,6 +30,7 @@ class Vector {
     drawZFi (z,fi,width=3){ // to draw vector from center to point(x1,y1)		
 		let x = z*Math.cos(fi*Math.PI/180);
 		let y = z*Math.sin(fi*Math.PI/180);
+
 		let xCanvas = x + this.x0;
 		let yCanvas = this.y0 - y;
 
@@ -40,11 +41,36 @@ class Vector {
 		ctx.lineCap = 'round';
         ctx.lineWidth = width;
         ctx.strokeStyle = this.color;
+
         // draw line
         ctx.beginPath();
         ctx.moveTo(this.x0,this.y0);
         ctx.lineTo(xCanvasTurned,yCanvasTurned);
 		ctx.stroke();
+
+		ctx.save();
+        var arrow_div = 1.15;
+        var arrow_angle = 3;
+        // draw the first arrow half
+        ctx.beginPath();
+        ctx.translate(this.x0, this.y0);    // translate to rectangle center
+        ctx.moveTo((xCanvasTurned-this.x0)/arrow_div,(yCanvasTurned-this.y0)/arrow_div);
+        ctx.rotate((Math.PI / 180) * arrow_angle);  // rotate
+        ctx.moveTo((xCanvasTurned-this.x0)/arrow_div,(yCanvasTurned-this.y0)/arrow_div);
+        ctx.rotate((Math.PI / 180) * -arrow_angle);  // rotate
+        ctx.lineTo(xCanvasTurned-this.x0,yCanvasTurned-this.y0);
+        ctx.stroke();
+
+        // draw the second arrow half
+        ctx.beginPath();
+        ctx.moveTo((xCanvasTurned-this.x0)/arrow_div,(yCanvasTurned-this.y0)/arrow_div);
+        ctx.rotate((Math.PI / 180) * -arrow_angle);  // rotate
+        ctx.moveTo((xCanvasTurned-this.x0)/arrow_div,(yCanvasTurned-this.y0)/arrow_div);
+        ctx.rotate((Math.PI / 180) * arrow_angle);  // rotate
+        ctx.lineTo(xCanvasTurned-this.x0,yCanvasTurned-this.y0);
+        ctx.stroke();
+
+        ctx.restore();
 
 		this.xPrev=x;
 		this.yPrev=y;
@@ -67,6 +93,30 @@ class Vector {
         ctx.lineTo(xCanvasTurned,yCanvasTurned);
         ctx.stroke();
 		
+		ctx.save();
+        var arrow_div = 1.15;
+        var arrow_angle = 3;
+        // draw the first arrow half
+        ctx.beginPath();
+        ctx.translate(this.x0, this.y0);    // translate to rectangle center
+        ctx.moveTo((xCanvasTurned-this.x0)/arrow_div,(yCanvasTurned-this.y0)/arrow_div);
+        ctx.rotate((Math.PI / 180) * arrow_angle);  // rotate
+        ctx.moveTo((xCanvasTurned-this.x0)/arrow_div,(yCanvasTurned-this.y0)/arrow_div);
+        ctx.rotate((Math.PI / 180) * -arrow_angle);  // rotate
+        ctx.lineTo(xCanvasTurned-this.x0,yCanvasTurned-this.y0);
+        ctx.stroke();
+
+        // draw the second arrow half
+        ctx.beginPath();
+        ctx.moveTo((xCanvasTurned-this.x0)/arrow_div,(yCanvasTurned-this.y0)/arrow_div);
+        ctx.rotate((Math.PI / 180) * -arrow_angle);  // rotate
+        ctx.moveTo((xCanvasTurned-this.x0)/arrow_div,(yCanvasTurned-this.y0)/arrow_div);
+        ctx.rotate((Math.PI / 180) * arrow_angle);  // rotate
+        ctx.lineTo(xCanvasTurned-this.x0,yCanvasTurned-this.y0);
+        ctx.stroke();
+
+        ctx.restore();
+
 		this.xPrevCanvas=calcCoordinatesOfTurnedPoint(this.x0, this.y0, xCanvasTurned, yCanvasTurned, 90)['x'];
 		this.yPrevCanvas=calcCoordinatesOfTurnedPoint(this.x0, this.y0, xCanvasTurned, yCanvasTurned, 90)['y'];
 
@@ -79,7 +129,7 @@ class Vector {
 	
 	
     drawXY (x,y,width=3){ // to draw vector from center to point(x1,y1)
-				
+			
 		let xCanvas = x + this.x0;
 		let yCanvas = this.y0 - y;
 
@@ -96,7 +146,31 @@ class Vector {
         ctx.moveTo(this.x0,this.y0);
         ctx.lineTo(xCanvasTurned,yCanvasTurned);
         ctx.stroke();
-		
+
+		ctx.save();
+        var arrow_div = 1.15;
+        var arrow_angle = 3;
+        // draw the first arrow half
+        ctx.beginPath();
+        ctx.translate(this.x0, this.y0);    // translate to rectangle center
+        ctx.moveTo((xCanvasTurned-this.x0)/arrow_div,(yCanvasTurned-this.y0)/arrow_div);
+        ctx.rotate((Math.PI / 180) * arrow_angle);  // rotate
+        ctx.moveTo((xCanvasTurned-this.x0)/arrow_div,(yCanvasTurned-this.y0)/arrow_div);
+        ctx.rotate((Math.PI / 180) * -arrow_angle);  // rotate
+        ctx.lineTo(xCanvasTurned-this.x0,yCanvasTurned-this.y0);
+        ctx.stroke();
+
+        // draw the second arrow half
+        ctx.beginPath();
+        ctx.moveTo((xCanvasTurned-this.x0)/arrow_div,(yCanvasTurned-this.y0)/arrow_div);
+        ctx.rotate((Math.PI / 180) * -arrow_angle);  // rotate
+        ctx.moveTo((xCanvasTurned-this.x0)/arrow_div,(yCanvasTurned-this.y0)/arrow_div);
+        ctx.rotate((Math.PI / 180) * arrow_angle);  // rotate
+        ctx.lineTo(xCanvasTurned-this.x0,yCanvasTurned-this.y0);
+        ctx.stroke();
+
+        ctx.restore();
+
 		this.xPrev=x;
 		this.yPrev=y;
 		this.xPrevCanvas=xCanvas;

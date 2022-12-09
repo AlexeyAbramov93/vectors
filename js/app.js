@@ -278,6 +278,7 @@ document.getElementById("FI2").value = vectorOrange3.angle();
 document.getElementById("V0").value = vectorOrange4.radius();
 document.getElementById("FI0").value = vectorOrange4.angle();
 
+
 function eventFormABC(value) {
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
