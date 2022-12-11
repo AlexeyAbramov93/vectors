@@ -169,32 +169,32 @@ function drawZeroSeq(vA,fiA,vB,fiB,vC,fiC){
 }
 
 // to calculate and draw Positive Sequence (A1,B1,C1) based on A1 Canvas (x,y)
-function drawPositiveSeqXYCanvas(x,y){
+function drawPositiveSeqXYCanvas(x,y,width=3){
     let x2 = calcCoordinatesOfTurnedPoint(vectorOrange1.x0, vectorOrange1.y0, x, y, 120)['x'];
     let y2 = calcCoordinatesOfTurnedPoint(vectorOrange1.x0, vectorOrange1.y0, x, y, 120)['y'];
     let x3 = calcCoordinatesOfTurnedPoint(vectorOrange1.x0, vectorOrange1.y0, x, y, -120)['x'];
     let y3 = calcCoordinatesOfTurnedPoint(vectorOrange1.x0, vectorOrange1.y0, x, y, -120)['y'];
-    vectorOrange1.drawXYCanvas(x,y);
-    vectorGreen1.drawXYCanvas(x2,y2);
-    vectorRed1.drawXYCanvas(x3,y3);
+    vectorOrange1.drawXYCanvas(x,y,width);
+    vectorGreen1.drawXYCanvas(x2,y2,width);
+    vectorRed1.drawXYCanvas(x3,y3,width);
 }
 
 // to calculate and draw Negative Sequence (A2,B2,C2) based on A2 Canvas (x,y)
-function drawNegativeSeqXYCanvas(x,y){
+function drawNegativeSeqXYCanvas(x,y,width=3){
     let x2 = calcCoordinatesOfTurnedPoint(vectorOrange3.x0, vectorOrange3.y0, x, y, -120)['x'];
     let y2 = calcCoordinatesOfTurnedPoint(vectorOrange3.x0, vectorOrange3.y0, x, y, -120)['y'];
     let x3 = calcCoordinatesOfTurnedPoint(vectorOrange3.x0, vectorOrange3.y0, x, y, 120)['x'];
     let y3 = calcCoordinatesOfTurnedPoint(vectorOrange3.x0, vectorOrange3.y0, x, y, 120)['y'];
-    vectorOrange3.drawXYCanvas(x,y);
-    vectorGreen3.drawXYCanvas(x2,y2);
-    vectorRed3.drawXYCanvas(x3,y3);
+    vectorOrange3.drawXYCanvas(x,y,width);
+    vectorGreen3.drawXYCanvas(x2,y2,width);
+    vectorRed3.drawXYCanvas(x3,y3,width);
 }
 
 // to draw Zero Sequence (A0,B0,C0) based on complex A2
-function drawZeroSeqXYCanvas(x,y){
-    vectorOrange4.drawXYCanvas(x,y);
-    vectorGreen4.drawXYCanvas(x,y);
-    vectorRed4.drawXYCanvas(x,y);
+function drawZeroSeqXYCanvas(x,y,width=3){
+    vectorOrange4.drawXYCanvas(x,y,width);
+    vectorGreen4.drawXYCanvas(x,y,width);
+    vectorRed4.drawXYCanvas(x,y,width);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -230,12 +230,36 @@ leftTopAxes.draw()
 rightTopAxes.draw()
 rightBottomAxes.draw()
 
+// to init Phase Vectors
+let vectorOrange2 = new Vector(o2.x,o2.y,'Va','orange');
+let vectorGreen2 = new Vector(o2.x,o2.y,'Vb','green');
+let vectorRed2 = new Vector(o2.x,o2.y,'Vc','red');
+// to init Positive Sequence vectors based on Phase Vectors
+let vectorOrange1 = new Vector(o1.x,o1.y,'A1','orange');
+let vectorGreen1 = new Vector(o1.x,o1.y,'B1','green');
+let vectorRed1 = new Vector(o1.x,o1.y,'C1','red');
+// to init Negative Sequence vectors based on Phase Vectors
+let vectorOrange3 = new Vector(o3.x,o3.y,'A2','orange');
+let vectorGreen3 = new Vector(o3.x,o3.y,'B2','green');
+let vectorRed3 = new Vector(o3.x,o3.y,'C2','red');
+// to init Zero Sequence vectors based on Phase Vectors
+let vectorOrange4 = new Vector(o4.x,o4.y,'A0','orange');
+let vectorGreen4 = new Vector(o4.x,o4.y,'B0','green');
+let vectorRed4 = new Vector(o4.x,o4.y,'C0','red');
+
 let vA = 240;
 let fiA = 0;
 let vB = 140;
 let fiB = -90;
 let vC = 100;
 let fiC = 90;
+
+vectorOrange2.drawZFi(vA,fiA,3); // to draw Phase Vector A
+vectorGreen2.drawZFi(vB,fiB,3); // to draw Phase Vector B
+vectorRed2.drawZFi(vC,fiC); // to draw Phase Vector C
+drawPositiveSeq(vA,fiA,vB,fiB,vC,fiC); // to draw Positive Sequence vectors based on Phase Vectors
+drawNegativeSeq(vA,fiA,vB,fiB,vC,fiC); // to draw Negative Sequence vectors based on Phase Vectors
+drawZeroSeq(vA,fiA,vB,fiB,vC,fiC); // to draw Zero Sequence vectors based on Phase Vectors
 
 document.getElementById("Va").value = vA;
 document.getElementById("FIa").value = fiA;
@@ -244,40 +268,12 @@ document.getElementById("FIb").value = fiB;
 document.getElementById("Vc").value = vC;
 document.getElementById("FIc").value = fiC;
 
-// to init Phase Vectors
-let vectorOrange2 = new Vector(o2.x, o2.y, 'orange');
-let vectorGreen2 = new Vector(o2.x, o2.y, 'green');
-let vectorRed2 = new Vector(o2.x, o2.y,'red');
-
-vectorOrange2.drawZFi(vA,fiA,3); // to draw Phase Vector A
-vectorGreen2.drawZFi(vB,fiB,3); // to draw Phase Vector B
-vectorRed2.drawZFi(vC,fiC); // to draw Phase Vector C
-
-// to init Positive Sequence vectors based on Phase Vectors
-let vectorOrange1 = new Vector(o1.x, o1.y, 'orange');
-let vectorGreen1 = new Vector(o1.x, o1.y, 'green');
-let vectorRed1 = new Vector(o1.x, o1.y,'red');
-drawPositiveSeq(vA,fiA,vB,fiB,vC,fiC); // to draw Positive Sequence vectors based on Phase Vectors
-
-// to init Negative Sequence vectors based on Phase Vectors
-let vectorOrange3 = new Vector(o3.x, o3.y, 'orange');
-let vectorGreen3 = new Vector(o3.x, o3.y, 'green');
-let vectorRed3 = new Vector(o3.x, o3.y,'red');
-drawNegativeSeq(vA,fiA,vB,fiB,vC,fiC); // to draw Negative Sequence vectors based on Phase Vectors
-
-// to init Zero Sequence vectors based on Phase Vectors
-let vectorOrange4 = new Vector(o4.x, o4.y, 'orange');
-let vectorGreen4 = new Vector(o4.x, o4.y, 'green');
-let vectorRed4 = new Vector(o4.x, o4.y,'red');
-drawZeroSeq(vA,fiA,vB,fiB,vC,fiC); // to draw Zero Sequence vectors based on Phase Vectors
-
 document.getElementById("V1").value = vectorOrange1.radius();
 document.getElementById("FI1").value = vectorOrange1.angle();
 document.getElementById("V2").value = vectorOrange3.radius();
 document.getElementById("FI2").value = vectorOrange3.angle();
 document.getElementById("V0").value = vectorOrange4.radius();
 document.getElementById("FI0").value = vectorOrange4.angle();
-
 
 function eventFormABC(value) {
 
@@ -370,7 +366,7 @@ canvas.onmousemove = function(event){
 	rightTopAxes.draw();
 	rightBottomAxes.draw();
 		
-	// drawing Phase Vectors
+    // if isCaptured is true
 	if (vectorOrange2.isCaptured){
 		vectorOrange2.drawXYCanvas(x,y,5);
         vectorGreen2.drawXY(vectorGreen2.xPrev,vectorGreen2.yPrev,5);
@@ -383,19 +379,29 @@ canvas.onmousemove = function(event){
         vectorOrange2.drawXY(vectorOrange2.xPrev,vectorOrange2.yPrev,5);
         vectorGreen2.drawXY(vectorGreen2.xPrev,vectorGreen2.yPrev,5);
 		vectorRed2.drawXYCanvas(x,y,5);
+	} else if (vectorOrange1.isCaptured){	// drawing Positive Sequence and Phase Vectors
+        drawPositiveSeqXYCanvas(x,y,5);
+        drawPhaseVectorsByA1A2A0coordinates(vectorOrange1,vectorOrange3,vectorOrange4);
+    } else if (vectorOrange3.isCaptured){ // drawing Negative Sequence and Phase Vectors
+        drawNegativeSeqXYCanvas(x,y,5);
+        drawPhaseVectorsByA1A2A0coordinates(vectorOrange1,vectorOrange3,vectorOrange4);
+    } else if (vectorOrange4.isCaptured){ // drawing Zero Sequence and Phase Vectors
+        drawZeroSeqXYCanvas(x,y,5);
+        drawPhaseVectorsByA1A2A0coordinates(vectorOrange1,vectorOrange3,vectorOrange4);  
+    // if clickDistance is true
 	} else if (vectorOrange2.clickDistance(x,y)<25||vectorGreen2.clickDistance(x,y)<25||vectorRed2.clickDistance(x,y)<25){
         vectorOrange2.drawXY(vectorOrange2.xPrev,vectorOrange2.yPrev,5);
         vectorGreen2.drawXY(vectorGreen2.xPrev,vectorGreen2.yPrev,5);
         vectorRed2.drawXY(vectorRed2.xPrev,vectorRed2.yPrev,5);
-	} else if (vectorOrange1.isCaptured){	// drawing Positive Sequence and Phase Vectors
-        drawPositiveSeqXYCanvas(x,y);
+    } else if (vectorOrange1.clickDistance(x,y)<25){
+        drawPositiveSeqXYCanvas(vectorOrange1.xPrevCanvasTurned,vectorOrange1.yPrevCanvasTurned,5);
         drawPhaseVectorsByA1A2A0coordinates(vectorOrange1,vectorOrange3,vectorOrange4);
-    } else if (vectorOrange3.isCaptured){ // drawing Negative Sequence and Phase Vectors
-        drawNegativeSeqXYCanvas(x,y);
+	} else if (vectorOrange3.clickDistance(x,y)<25){
+        drawNegativeSeqXYCanvas(vectorOrange3.xPrevCanvasTurned,vectorOrange3.yPrevCanvasTurned,5);
         drawPhaseVectorsByA1A2A0coordinates(vectorOrange1,vectorOrange3,vectorOrange4);
-    } else if (vectorOrange4.isCaptured){ // drawing Zero Sequence and Phase Vectors
-        drawZeroSeqXYCanvas(x,y);
-        drawPhaseVectorsByA1A2A0coordinates(vectorOrange1,vectorOrange3,vectorOrange4);    
+	} else if (vectorOrange4.clickDistance(x,y)<25){
+        drawZeroSeqXYCanvas(vectorOrange4.xPrevCanvasTurned,vectorOrange4.yPrevCanvasTurned,5);
+        drawPhaseVectorsByA1A2A0coordinates(vectorOrange1,vectorOrange3,vectorOrange4);
     } else {
         vectorOrange2.drawXY(vectorOrange2.xPrev,vectorOrange2.yPrev);
         vectorGreen2.drawXY(vectorGreen2.xPrev,vectorGreen2.yPrev);
@@ -412,9 +418,6 @@ canvas.onmousemove = function(event){
     drawPositiveSeq(vA,fiA,vB,fiB,vC,fiC); // to draw Positive Sequence vectors based on Phase Vectors
     drawNegativeSeq(vA,fiA,vB,fiB,vC,fiC); // to draw Negative Sequence vectors based on Phase Vectors
     drawZeroSeq(vA,fiA,vB,fiB,vC,fiC); // to draw Negative Sequence vectors based on Phase Vectors
-
-
-
 
     document.getElementById("Va").value = vectorOrange2.radius();
     document.getElementById("FIa").value = vectorOrange2.angle();
