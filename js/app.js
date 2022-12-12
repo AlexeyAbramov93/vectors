@@ -194,7 +194,7 @@ function drawNegativeSeqXYCanvas(x,y,width=3){
 function drawZeroSeqXYCanvas(x,y,width=3){
     vectorOrange4.drawXYCanvas(x,y,width);
     vectorGreen4.drawXYCanvas(x,y,width);
-    vectorRed4.drawXYCanvas(x,y,width);
+    vectorRed4.drawXYCanvas(x,y,width);    
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -243,11 +243,11 @@ let vectorOrange3 = new Vector(o3.x,o3.y,'A2','orange');
 let vectorGreen3 = new Vector(o3.x,o3.y,'B2','green');
 let vectorRed3 = new Vector(o3.x,o3.y,'C2','red');
 // to init Zero Sequence vectors based on Phase Vectors
-let vectorOrange4 = new Vector(o4.x,o4.y,'A0','orange');
-let vectorGreen4 = new Vector(o4.x,o4.y,'B0','green');
-let vectorRed4 = new Vector(o4.x,o4.y,'C0','red');
+let vectorOrange4 = new Vector(o4.x,o4.y,'V0','gray');
+let vectorGreen4 = new Vector(o4.x,o4.y,'V0','gray');
+let vectorRed4 = new Vector(o4.x,o4.y,'V0','gray');
 
-let vA = 240;
+let vA = 180;
 let fiA = 0;
 let vB = 140;
 let fiB = -90;
@@ -301,7 +301,6 @@ function eventFormABC(value) {
     document.getElementById("FI2").value = vectorOrange3.angle();
     document.getElementById("V0").value = vectorOrange4.radius();
     document.getElementById("FI0").value = vectorOrange4.angle();
-
 }
 
 function eventFormA1A2A0(value) {
@@ -389,7 +388,7 @@ canvas.onmousemove = function(event){
         drawZeroSeqXYCanvas(x,y,5);
         drawPhaseVectorsByA1A2A0coordinates(vectorOrange1,vectorOrange3,vectorOrange4);  
     // if clickDistance is true
-	} else if (vectorOrange2.clickDistance(x,y)<25||vectorGreen2.clickDistance(x,y)<25||vectorRed2.clickDistance(x,y)<25){
+    } else if (vectorOrange2.clickDistance(x,y)<25||vectorGreen2.clickDistance(x,y)<25||vectorRed2.clickDistance(x,y)<25){
         vectorOrange2.drawXY(vectorOrange2.xPrev,vectorOrange2.yPrev,5);
         vectorGreen2.drawXY(vectorGreen2.xPrev,vectorGreen2.yPrev,5);
         vectorRed2.drawXY(vectorRed2.xPrev,vectorRed2.yPrev,5);

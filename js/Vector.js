@@ -100,7 +100,7 @@ class Vector {
         let xCanvasTurnedTitle = calcCoordinatesOfTurnedPoint(this.x0, this.y0, xCanvasTitle, yCanvasTitle, -90)['x'];
 		let yCanvasTurnedTitle = calcCoordinatesOfTurnedPoint(this.x0, this.y0, xCanvasTitle, yCanvasTitle, -90)['y'];
         
-        if(this.radius()>50) {
+        if(this.radius()>45) {
             ctx.save();
             //ctx.fillStyle = this.color;
             ctx.font = "24px serif"; 
@@ -112,20 +112,37 @@ class Vector {
     }
 
     drawDegrees(){
-		let xCanvasTitle = this.xPrev/0.9 + this.x0;
-		let yCanvasTitle  = this.y0 - this.yPrev/0.9;
-        let xCanvasTurnedTitle = calcCoordinatesOfTurnedPoint(this.x0, this.y0, xCanvasTitle, yCanvasTitle, -85)['x'];
+		let xCanvasTitle = this.xPrev/0.97 + this.x0;
+		let yCanvasTitle  = this.y0 - this.yPrev/0.97;
+        let xCanvasTurnedTitle = calcCoordinatesOfTurnedPoint(this.x0, this.y0, xCanvasTitle, yCanvasTitle, -90)['x'];
 		let yCanvasTurnedTitle = calcCoordinatesOfTurnedPoint(this.x0, this.y0, xCanvasTitle, yCanvasTitle, -90)['y'];
         
-        if(this.radius()>30) {
-            ctx.save();
-            ctx.fillStyle = this.color;
-            ctx.font = "21px serif"; 
-            ctx.textBaseline = 'top'
-            ctx.textAlign = 'center';
-            ctx.fillText(this.angle(), xCanvasTurnedTitle, yCanvasTurnedTitle);
-            ctx.restore();
+        ctx.save();
+        
+        if(xCanvasTurnedTitle>this.x0) {
+            ctx.textAlign = 'left';
         }
+        else if (xCanvasTurnedTitle<this.x0) {
+            ctx.textAlign = 'right';
+        }
+        else {
+            ctx.textAlign = 'center';
+        }
+
+        if(yCanvasTurnedTitle<this.y0) {
+            ctx.textBaseline = 'bottom';
+        }
+        else if (yCanvasTurnedTitle>this.y0) {
+            ctx.textBaseline = 'top';
+        }
+        else {
+            ctx.textBaseline = 'middle';
+        }
+        
+        ctx.fillStyle = this.color;
+        ctx.font = "18px serif"; 
+        ctx.fillText(this.angle(), xCanvasTurnedTitle, yCanvasTurnedTitle);
+        ctx.restore();
     }
 
     drawZFi (z,fi,width=3){ // to draw vector from center to point(x1,y1)		
