@@ -1,79 +1,56 @@
 class Vector {
 
-    x0;
-    y0;
-    
-    xPrev;
-    yPrev;
-    
-	color = 'black';
-	
+    title;  // vector title
+    width = 3;  // vector width
+    color = 'black';    // vector color
+
     isCaptured = false; // true if the vector is captured onmousedown, otherwise false
 
-    constructor(x0, y0, xPrev, yPrev, color) {
-        this.x0 = x0;
-        this.y0 = y0;
-        this.xPrev = xPrev;
-        this.yPrev = yPrev;
+    xPrev;
+    yPrev;
+
+    xPrevCanvas;
+    yPrevCanvas;
+
+    radiusPrev;
+    anglePrev;
+
+    scale;
+
+    // объединить в словарь координаты центра
+    constructor(ctx, VectorDiagramCenterXCanvas, VectorDiagramCenterYCanvas, title, color, scale) {
+        this.ctx = ctx;
+        this.VectorDiagramCenterXCanvas = VectorDiagramCenterXCanvas;
+        this.VectorDiagramCenterYCanvas = VectorDiagramCenterYCanvas;
+        this.title = title;
         this.color = color;
-
+        this.scale = scale;
     }
 
-    radius() {  // to calculate distance from center to vector point
-        return (((this.xPrev-this.x0)**2 + (this.yPrev-this.y0)**2)**0.5/(canvas.width/4)/axisScale).toFixed(2);
-    }
+    draw(x0, y0, xCanvas,yCanvas){
+        this.ctx.lineCap = 'round';
+        this.ctx.strokeStyle = this.color;
+        this.ctx.lineWidth = this.width;
 
-    clickDistance(x,y) { // to calculate distance from click point to vector point
-        return ((this.xPrev-x)**2+(this.yPrev-y)**2)**0.5;
-    }
-
-    angle() {
-
-        let x = (this.xPrev-this.x0);
-        let y = (this.yPrev-this.y0);
-
-        if(y<0){
-            return (Math.atan(x/y) / Math.PI * 180).toFixed(2);;
-        } else if(x<0){
-            return (Math.atan(x/y) / Math.PI * 180 + 180).toFixed(2);;
-        } else if(x>=0){
-            return (Math.atan(x/y) / Math.PI * 180 - 180).toFixed(2);;
-        }
-    }
-
-    draw (x1,y1,width=3){ // to draw vector from center to point(x1,y1)
-        ctx.save();
-        ctx.lineCap = 'round';
-        ctx.lineWidth = width;
-        ctx.strokeStyle = this.color;
         // draw line
-        ctx.beginPath();
-        ctx.moveTo(this.x0,this.y0);
-        ctx.lineTo(x1,y1);
-        ctx.stroke();
+        this.ctx.beginPath();
+        this.ctx.moveTo(x0,y0);
+        this.ctx.lineTo(xCanvas,yCanvas);
+        this.ctx.stroke();
 
-        var arrow_div = 1.15;
-        var arrow_angle = 3;
-        // draw the first arrow half
-        ctx.beginPath();
-        ctx.translate(this.x0, this.y0);    // translate to rectangle center
-        ctx.moveTo((x1-this.x0)/arrow_div,(y1-this.y0)/arrow_div);
-        ctx.rotate((Math.PI / 180) * arrow_angle);  // rotate
-        ctx.moveTo((x1-this.x0)/arrow_div,(y1-this.y0)/arrow_div);
-        ctx.rotate((Math.PI / 180) * -arrow_angle);  // rotate
-        ctx.lineTo(x1-this.x0,y1-this.y0);
-        ctx.stroke();
+        this.xPrevCanvas=xCanvas;
+        this.yPrevCanvas=yCanvas;
 
-        // draw the second arrow half
-        ctx.beginPath();
-        ctx.moveTo((x1-this.x0)/arrow_div,(y1-this.y0)/arrow_div);
-        ctx.rotate((Math.PI / 180) * -arrow_angle);  // rotate
-        ctx.moveTo((x1-this.x0)/arrow_div,(y1-this.y0)/arrow_div);
-        ctx.rotate((Math.PI / 180) * arrow_angle);  // rotate
-        ctx.lineTo(x1-this.x0,y1-this.y0);
-        ctx.stroke();
+        this.xPrev=this.xPrevCanvas-this.VectorDiagramCenterXCanvas;
+        this.yPrev=this.VectorDiagramCenterYCanvas-this.yPrevCanvas;
 
-        ctx.restore();
+        var temp = new Complex(this.xPrev,this.yPrev);
+        this.radiusPrev=(temp.mod()*this.scale).toFixed(2);
+        this.anglePrev=(temp.arg()*180/Math.PI).toFixed(2);
     }
-}
 
+    clickDistance(xCanvas,yCanvas) { // to calculate distance from click point to vector point
+        return ((this.xPrevCanvas-xCanvas)**2+(this.yPrevCanvas-yCanvas)**2)**0.5;
+    }	
+
+}
