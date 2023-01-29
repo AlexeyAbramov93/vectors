@@ -11,46 +11,59 @@
     <header></header>
     <h1>РАЗЛОЖЕНИЕ НА СИММЕТРИЧНЫЕ СОСТАВЛЯЮЩИЕ</h1>
 	
+	
 	<div class="block-left">
-	  <form name="publish">
-		Va:
-		<input type="text" name="Va" onchange='eventFormABC(this.value)' id="Va">
-		FIa:
-		<input type="text" name="FIa" onchange='eventFormABC(this.value)' id="FIa">
-		Vb:
-		<input type="text" name="Vb" onchange='eventFormABC(this.value)' id="Vb">
-		FIb:
-		<input type="text" name="FIb" onchange='eventFormABC(this.value)' id="FIb">
-		Vc:
-		<input type="text" name="Vc" onchange='eventFormABC(this.value)' id="Vc">
-		FIc:
-		<input type="text" name="FIc" onchange='eventFormABC(this.value)' id="FIc">
-		
-		<br><br>
-		
-		V1:
-		<input type="text" name="V1" onchange='eventFormA1A2A0(this.value)' id="V1">
-		FI1:
-		<input type="text" name="FI1" onchange='eventFormA1A2A0(this.value)' id="FI1">
-		V2:
-		<input type="text" name="V2" onchange='eventFormA1A2A0(this.value)' id="V2">
-		FI2:
-		<input type="text" name="FI2" onchange='eventFormA1A2A0(this.value)' id="FI2">
-		V0:
-		<input type="text" name="V0" onchange='eventFormA1A2A0(this.value)' id="V0">
-		FI0:
-		<input type="text" name="FI0" onchange='eventFormA1A2A0(this.value)' id="FI0">
 
-	</form>
+		<form name="mashtabValue">
+			Масштаб:
+			<input type="number" name="mashtab" onchange='eventFormMashtab(this.value)' id="mashtab">
+			<br>
+
+			Va:
+			<input type="text" name="Va" onchange='eventFormVectorsABC(this.value)' id="Va">
+			FIa:
+			<input type="text" name="FIa" onchange='eventFormVectorsABC(this.value)' id="FIa">
+			Vb:
+			<input type="text" name="Vb" onchange='eventFormVectorsABC(this.value)' id="Vb">
+			FIb:
+			<input type="text" name="FIb" onchange='eventFormVectorsABC(this.value)' id="FIb">
+			Vc:
+			<input type="text" name="Vc" onchange='eventFormVectorsABC(this.value)' id="Vc">
+			FIc:
+			<input type="text" name="FIc" onchange='eventFormVectorsABC(this.value)' id="FIc">
+			<br>
+
+			V1:
+			<input type="text" name="V1" onchange='eventFormVectorsA1A2A0(this.value)' id="V1">
+			FI1:
+			<input type="text" name="FI1" onchange='eventFormVectorsA1A2A0(this.value)' id="FI1">
+			V2:
+			<input type="text" name="V2" onchange='eventFormVectorsA1A2A0(this.value)' id="V2">
+			FI2:
+			<input type="text" name="FI2" onchange='eventFormVectorsA1A2A0(this.value)' id="FI2">
+			V0:
+			<input type="text" name="V0" onchange='eventFormVectorsA1A2A0(this.value)' id="V0">
+			FI0:
+			<input type="text" name="FI0" onchange='eventFormVectorsA1A2A0(this.value)' id="FI0">
+		</form>
 	</div>
 
 	<div class="block-right">
-		<canvas id="canvas" width="1100" height="1100"></canvas>
+		<canvas id="canvas" width="1500" height="1500"></canvas>
 	</div>
 
-    <script src="js/Complex.js"></script>
-    <script src="js/Axes.js"></script>
+
+
+
+	<script  src='js/Complex.js'></script>
+
+    <script src="js/getCoordinatesOfTurnedPoint.js"></script>
+    <script src="js/getA1A2A0coordinates.js"></script>
+
+    <script src="js/VectorDiagram.js"></script>
+    <script src="js/Background.js"></script>
     <script src="js/Vector.js"></script>
+
     <script src="js/Sequence.js"></script>
     <script src="js/app.js"></script>
 

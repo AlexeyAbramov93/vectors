@@ -1,9 +1,218 @@
+// В апп работать только с модулем и углом, а координатна сетка должнабыть только внутри
+
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 
+const phaseVectorsSettings = {
+    bgcolor: '#ff0000',
+    width: 500,
+    mashtab: 1000,
+
+    vectors: [
+        {
+            name: "Ia",
+            type: "I",
+            color: "red"
+        },
+        {
+            name: "Ib",
+            type: "I",
+            color: "blue"
+        },
+        {
+            name: "Ic",
+            type: "I",
+            color: "green"
+        },
+        {
+            name: "Ua",
+            type: "U",
+            color: "black"
+        },
+        {
+            name: "Ua",
+            type: "U",
+            color: "gray"
+        },
+        {
+            name: "Ua",
+            type: "U",
+            color: "black"
+        },
+        {
+            name: "Ua",
+            type: "U",
+            color: "gray"
+        }
+    ]
+}
+
+const phaseVectorsValues = [
+    {value: 500, angle: 10},
+    {value: 300, angle: -110},
+    {value: 250, angle: 110},
+    {value: 100, angle: 60},
+    {value: 100, angle: 30},
+    {value: 250, angle: 65},
+    {value: 250, angle: 35}
+]
+
+const phaseVectorsDiagram = new VectorDiagram(ctx, 50, 50, 'Фазные вектора', phaseVectorsSettings);
+const positiveVectorsDiagram = new VectorDiagram(ctx, 700, 50, 'Прямая последовательность', phaseVectorsSettings);
+const negativeVectorsDiagram = new VectorDiagram(ctx, 50, 700, 'Обратная последовательность', phaseVectorsSettings);
+const zeroVectorsDiagram = new VectorDiagram(ctx, 700, 700, 'Нулевая последовательность', phaseVectorsSettings);
+
+phaseVectorsDiagram.drawVectorsByValues(phaseVectorsValues);
+positiveVectorsDiagram.drawVectorsByValues(phaseVectorsValues);
+negativeVectorsDiagram.drawVectorsByValues(phaseVectorsValues);
+zeroVectorsDiagram.drawVectorsByValues(phaseVectorsValues);
+
+document.getElementById("mashtab").value = VectorDiagram.mashtab;
+document.getElementById("Va").value = phaseVectorsDiagram.vectorsArray[0].radiusPrev;
+document.getElementById("FIa").value = phaseVectorsDiagram.vectorsArray[0].anglePrev;
+document.getElementById("Vb").value = phaseVectorsDiagram.vectorsArray[1].radiusPrev;
+document.getElementById("FIb").value = phaseVectorsDiagram.vectorsArray[1].anglePrev;
+document.getElementById("Vc").value = phaseVectorsDiagram.vectorsArray[2].radiusPrev;
+document.getElementById("FIc").value = phaseVectorsDiagram.vectorsArray[2].anglePrev;
+
+function eventFormMashtab(value) {
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+    VectorDiagram.mashtab = document.getElementById("mashtab").value;
+    phaseVectorsDiagram.drawVectorsByValues(phaseVectorsDiagram.getSavedPhaseVectorsValuesPrev());
+    positiveVectorsDiagram.drawVectorsByValues(positiveVectorsDiagram.getSavedPhaseVectorsValuesPrev());
+    negativeVectorsDiagram.drawVectorsByValues(negativeVectorsDiagram.getSavedPhaseVectorsValuesPrev());
+    zeroVectorsDiagram.drawVectorsByValues(zeroVectorsDiagram.getSavedPhaseVectorsValuesPrev());
+}
+
+function eventFormVectorsABC(value) {
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const phaseVectorsValues = [
+        {value: document.getElementById("Va").value, angle: document.getElementById("FIa").value},
+        {value: document.getElementById("Vb").value, angle: document.getElementById("FIb").value},
+        {value: document.getElementById("Vc").value, angle: document.getElementById("FIc").value},
+        {value: 100, angle: 60},
+        {value: 100, angle: 30},
+        {value: 250, angle: 65},
+        {value: 250, angle: 35}
+    ]
+
+    phaseVectorsDiagram.drawVectorsByValues(phaseVectorsValues);
+    positiveVectorsDiagram.drawVectorsByValues(phaseVectorsValues);
+    negativeVectorsDiagram.drawVectorsByValues(phaseVectorsValues);
+    zeroVectorsDiagram.drawVectorsByValues(phaseVectorsValues);
+
+    document.getElementById("Va").value = phaseVectorsDiagram.vectorsArray[0].radiusPrev;
+    document.getElementById("FIa").value = phaseVectorsDiagram.vectorsArray[0].anglePrev;
+    document.getElementById("Vb").value = phaseVectorsDiagram.vectorsArray[1].radiusPrev;
+    document.getElementById("FIb").value = phaseVectorsDiagram.vectorsArray[1].anglePrev;
+    document.getElementById("Vc").value = phaseVectorsDiagram.vectorsArray[2].radiusPrev;
+    document.getElementById("FIc").value = phaseVectorsDiagram.vectorsArray[2].anglePrev;
+}
+
+canvas.onmousedown = function(event){
+    var x = event.offsetX;
+    var y = event.offsetY;
+    phaseVectorsDiagram.checkCapture(x,y);
+    positiveVectorsDiagram.checkCapture(x,y);
+    negativeVectorsDiagram.checkCapture(x,y);
+    zeroVectorsDiagram.checkCapture(x,y);
+
+}
+
+canvas.onmousemove = function(event){
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	var x = event.offsetX;
+    var y = event.offsetY;
+    
+    phaseVectorsDiagram.drawVectorsByCoordinates(phaseVectorsDiagram.getCoordinatesFromClick(x,y))
+    // positiveVectorsDiagram.drawVectorsByCoordinates(positiveVectorsDiagram.getCoordinatesFromClick(x,y))
+    // negativeVectorsDiagram.drawVectorsByCoordinates(negativeVectorsDiagram.getCoordinatesFromClick(x,y))
+    // zeroVectorsDiagram.drawVectorsByCoordinates(zeroVectorsDiagram.getCoordinatesFromClick(x,y))
+
+    document.getElementById("Va").value = phaseVectorsDiagram.vectorsArray[0].radiusPrev;
+    document.getElementById("FIa").value = phaseVectorsDiagram.vectorsArray[0].anglePrev;
+    document.getElementById("Vb").value = phaseVectorsDiagram.vectorsArray[1].radiusPrev;
+    document.getElementById("FIb").value = phaseVectorsDiagram.vectorsArray[1].anglePrev;
+    document.getElementById("Vc").value = phaseVectorsDiagram.vectorsArray[2].radiusPrev;
+    document.getElementById("FIc").value = phaseVectorsDiagram.vectorsArray[2].anglePrev;
+
+}
+
+canvas.onmouseup = function(event){
+    phaseVectorsDiagram.resetCapture();
+    positiveVectorsDiagram.resetCapture();
+    negativeVectorsDiagram.resetCapture();
+    zeroVectorsDiagram.resetCapture();
+}
+
+canvas.onmouseout = function(event){
+    phaseVectorsDiagram.resetCapture();
+    positiveVectorsDiagram.resetCapture();
+    negativeVectorsDiagram.resetCapture();
+    zeroVectorsDiagram.resetCapture();
+}
+
+
+
+
+// let A1x = positiveVectors.x0 + getA1A2A0coordinates(vA,fiA,vB,fiB,vC,fiC).A1x ;
+// let A1y = positiveVectors.y0 - getA1A2A0coordinates(vA,fiA,vB,fiB,vC,fiC).A1y;
+// let B1x = getCoordinatesOfTurnedPoint(positiveVectors.x0, positiveVectors.y0, A1x, A1y, 120)['x'];
+// let B1y = getCoordinatesOfTurnedPoint(positiveVectors.x0, positiveVectors.y0, A1x, A1y, 120)['y'];
+// let C1x = getCoordinatesOfTurnedPoint(positiveVectors.x0, positiveVectors.y0, A1x, A1y, -120)['x'];
+// let C1y = getCoordinatesOfTurnedPoint(positiveVectors.x0, positiveVectors.y0, A1x, A1y, -120)['y'];
+// let positiveVectorsCoordinates = [A1x,A1y,B1x,B1y,C1x,C1y];
+// positiveVectors.drawVectorsByCoordinates(positiveVectorsCoordinates);
+
+// let A2x = negativeVectors.x0 + getA1A2A0coordinates(vA,fiA,vB,fiB,vC,fiC).A2x;
+// let A2y = negativeVectors.y0 - getA1A2A0coordinates(vA,fiA,vB,fiB,vC,fiC).A2y;
+// let B2x=getCoordinatesOfTurnedPoint(negativeVectors.x0, negativeVectors.y0, A2x, A2y, -120)['x'];
+// let B2y=getCoordinatesOfTurnedPoint(negativeVectors.x0, negativeVectors.y0, A2x, A2y, -120)['y'];
+// let C2x=getCoordinatesOfTurnedPoint(negativeVectors.x0, negativeVectors.y0, A2x, A2y, 120)['x'];
+// let C2y=getCoordinatesOfTurnedPoint(negativeVectors.x0, negativeVectors.y0, A2x, A2y, 120)['y'];
+// let negativeVectorsCoordinates = [A2x,A2y,B2x,B2y,C2x,C2y];
+// negativeVectors.drawVectorsByCoordinates(negativeVectorsCoordinates);
+
+// let A0x = zeroVectors.x0 + getA1A2A0coordinates(vA,fiA,vB,fiB,vC,fiC).A0x;
+// let A0y = zeroVectors.y0 - getA1A2A0coordinates(vA,fiA,vB,fiB,vC,fiC).A0y;
+// let zeroVectorsCoordinates = [A0x,A0y,A0x,A0y,A0x,A0y];
+// zeroVectors.drawVectorsByCoordinates(zeroVectorsCoordinates);
+
+// document.getElementById("Va").value = phaseVectors.vect1.radius;
+// document.getElementById("FIa").value = phaseVectors.vect1.angle;
+// document.getElementById("Vb").value = phaseVectors.vect2.radius;
+// document.getElementById("FIb").value = phaseVectors.vect2.angle;
+// document.getElementById("Vc").value = phaseVectors.vect3.radius;
+// document.getElementById("FIc").value = phaseVectors.vect3.angle;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
 // to calculate coordinates of the turned point
 // https://foxford.ru/wiki/informatika/povorot-tochki
-function calcCoordinatesOfTurnedPoint(oX, oY, curPointX, curPointY, degree){
+function getCoordinatesOfTurnedPoint(oX, oY, curPointX, curPointY, degree){
     turnedPointX = oX + (curPointX-oX)*Math.cos(Math.PI/180*degree) - (curPointY-oY)*Math.sin(Math.PI/180*degree);
     turnedPointY = oY + (curPointX-oX)*Math.sin(Math.PI/180*degree) + (curPointY-oY)*Math.cos(Math.PI/180*degree);
     return {'x': turnedPointX, 'y': turnedPointY};
@@ -63,15 +272,15 @@ function drawPhaseVectorsByA1A2A0(v1,fi1,v2,fi2,v0,fi0){
     let A2y = v2*Math.sin(fi2*Math.PI/180);
     let V0x = v0*Math.cos(fi0*Math.PI/180);
     let V0y = v0*Math.sin(fi0*Math.PI/180);
-    let B1x = calcCoordinatesOfTurnedPoint(0, 0, A1x, A1y, -120)['x'];
-    let B1y = calcCoordinatesOfTurnedPoint(0, 0, A1x, A1y, -120)['y'];
-    let C1x = calcCoordinatesOfTurnedPoint(0, 0, A1x, A1y, 120)['x'];
-    let C1y = calcCoordinatesOfTurnedPoint(0, 0, A1x, A1y, 120)['y'];
+    let B1x = getCoordinatesOfTurnedPoint(0, 0, A1x, A1y, -120)['x'];
+    let B1y = getCoordinatesOfTurnedPoint(0, 0, A1x, A1y, -120)['y'];
+    let C1x = getCoordinatesOfTurnedPoint(0, 0, A1x, A1y, 120)['x'];
+    let C1y = getCoordinatesOfTurnedPoint(0, 0, A1x, A1y, 120)['y'];
 
-    let B2x = calcCoordinatesOfTurnedPoint(0, 0, A2x, A2y, 120)['x'];
-    let B2y = calcCoordinatesOfTurnedPoint(0, 0, A2x, A2y, 120)['y'];
-    let C2x = calcCoordinatesOfTurnedPoint(0, 0, A2x, A2y, -120)['x'];
-    let C2y = calcCoordinatesOfTurnedPoint(0, 0, A2x, A2y, -120)['y'];
+    let B2x = getCoordinatesOfTurnedPoint(0, 0, A2x, A2y, 120)['x'];
+    let B2y = getCoordinatesOfTurnedPoint(0, 0, A2x, A2y, 120)['y'];
+    let C2x = getCoordinatesOfTurnedPoint(0, 0, A2x, A2y, -120)['x'];
+    let C2y = getCoordinatesOfTurnedPoint(0, 0, A2x, A2y, -120)['y'];
 
     Ax = A1x+A2x+V0x;
     Ay = A1y+A2y+V0y;
@@ -100,17 +309,17 @@ function drawPhaseVectorsByA1A2A0coordinates(A1,A2,A0){
 
     let A1x = A1.xPrev;
     let A1y = A1.yPrev;
-    let B1x = calcCoordinatesOfTurnedPoint(0, 0, A1x, A1y, -120)['x'];
-    let B1y = calcCoordinatesOfTurnedPoint(0, 0, A1x, A1y, -120)['y'];
-    let C1x = calcCoordinatesOfTurnedPoint(0, 0, A1x, A1y, 120)['x'];
-    let C1y = calcCoordinatesOfTurnedPoint(0, 0, A1x, A1y, 120)['y'];
+    let B1x = getCoordinatesOfTurnedPoint(0, 0, A1x, A1y, -120)['x'];
+    let B1y = getCoordinatesOfTurnedPoint(0, 0, A1x, A1y, -120)['y'];
+    let C1x = getCoordinatesOfTurnedPoint(0, 0, A1x, A1y, 120)['x'];
+    let C1y = getCoordinatesOfTurnedPoint(0, 0, A1x, A1y, 120)['y'];
 
     let A2x = A2.xPrev;
     let A2y = A2.yPrev;
-    let B2x = calcCoordinatesOfTurnedPoint(0, 0, A2x, A2y, 120)['x'];
-    let B2y = calcCoordinatesOfTurnedPoint(0, 0, A2x, A2y, 120)['y'];
-    let C2x = calcCoordinatesOfTurnedPoint(0, 0, A2x, A2y, -120)['x'];
-    let C2y = calcCoordinatesOfTurnedPoint(0, 0, A2x, A2y, -120)['y'];
+    let B2x = getCoordinatesOfTurnedPoint(0, 0, A2x, A2y, 120)['x'];
+    let B2y = getCoordinatesOfTurnedPoint(0, 0, A2x, A2y, 120)['y'];
+    let C2x = getCoordinatesOfTurnedPoint(0, 0, A2x, A2y, -120)['x'];
+    let C2y = getCoordinatesOfTurnedPoint(0, 0, A2x, A2y, -120)['y'];
 
     let Ax = A1x+A2x+A0x;
     let Ay = A1y+A2y+A0y;
@@ -137,10 +346,10 @@ function drawPhaseVectorsByA1A2A0coordinates(A1,A2,A0){
 function drawPositiveSeq(vA,fiA,vB,fiB,vC,fiC){
     let A1x = getA1A2A0coordinates(vA,fiA,vB,fiB,vC,fiC).A1x;
     let A1y = getA1A2A0coordinates(vA,fiA,vB,fiB,vC,fiC).A1y;
-    let B1x=calcCoordinatesOfTurnedPoint(0, 0, A1x, A1y, -120)['x'];
-    let B1y=calcCoordinatesOfTurnedPoint(0, 0, A1x, A1y, -120)['y'];
-    let C1x=calcCoordinatesOfTurnedPoint(0, 0, A1x, A1y, 120)['x'];
-    let C1y=calcCoordinatesOfTurnedPoint(0, 0, A1x, A1y, 120)['y'];
+    let B1x=getCoordinatesOfTurnedPoint(0, 0, A1x, A1y, -120)['x'];
+    let B1y=getCoordinatesOfTurnedPoint(0, 0, A1x, A1y, -120)['y'];
+    let C1x=getCoordinatesOfTurnedPoint(0, 0, A1x, A1y, 120)['x'];
+    let C1y=getCoordinatesOfTurnedPoint(0, 0, A1x, A1y, 120)['y'];
     vectorOrange1.drawXY(A1x,A1y);
     vectorGreen1.drawXY(B1x,B1y);
     vectorRed1.drawXY(C1x,C1y);
@@ -150,10 +359,10 @@ function drawPositiveSeq(vA,fiA,vB,fiB,vC,fiC){
 function drawNegativeSeq(vA,fiA,vB,fiB,vC,fiC){
     let A2x = getA1A2A0coordinates(vA,fiA,vB,fiB,vC,fiC).A2x;
     let A2y = getA1A2A0coordinates(vA,fiA,vB,fiB,vC,fiC).A2y;
-    let B2x=calcCoordinatesOfTurnedPoint(0, 0, A2x, A2y, 120)['x'];
-    let B2y=calcCoordinatesOfTurnedPoint(0, 0, A2x, A2y, 120)['y'];
-    let C2x=calcCoordinatesOfTurnedPoint(0, 0, A2x, A2y, -120)['x'];
-    let C2y=calcCoordinatesOfTurnedPoint(0, 0, A2x, A2y, -120)['y'];
+    let B2x=getCoordinatesOfTurnedPoint(0, 0, A2x, A2y, 120)['x'];
+    let B2y=getCoordinatesOfTurnedPoint(0, 0, A2x, A2y, 120)['y'];
+    let C2x=getCoordinatesOfTurnedPoint(0, 0, A2x, A2y, -120)['x'];
+    let C2y=getCoordinatesOfTurnedPoint(0, 0, A2x, A2y, -120)['y'];
     vectorOrange3.drawXY(A2x,A2y);
     vectorGreen3.drawXY(B2x,B2y);
     vectorRed3.drawXY(C2x,C2y);
@@ -170,10 +379,10 @@ function drawZeroSeq(vA,fiA,vB,fiB,vC,fiC){
 
 // to calculate and draw Positive Sequence (A1,B1,C1) based on A1 Canvas (x,y)
 function drawPositiveSeqXYCanvas(x,y,width=3){
-    let x2 = calcCoordinatesOfTurnedPoint(vectorOrange1.x0, vectorOrange1.y0, x, y, 120)['x'];
-    let y2 = calcCoordinatesOfTurnedPoint(vectorOrange1.x0, vectorOrange1.y0, x, y, 120)['y'];
-    let x3 = calcCoordinatesOfTurnedPoint(vectorOrange1.x0, vectorOrange1.y0, x, y, -120)['x'];
-    let y3 = calcCoordinatesOfTurnedPoint(vectorOrange1.x0, vectorOrange1.y0, x, y, -120)['y'];
+    let x2 = getCoordinatesOfTurnedPoint(vectorOrange1.x0, vectorOrange1.y0, x, y, 120)['x'];
+    let y2 = getCoordinatesOfTurnedPoint(vectorOrange1.x0, vectorOrange1.y0, x, y, 120)['y'];
+    let x3 = getCoordinatesOfTurnedPoint(vectorOrange1.x0, vectorOrange1.y0, x, y, -120)['x'];
+    let y3 = getCoordinatesOfTurnedPoint(vectorOrange1.x0, vectorOrange1.y0, x, y, -120)['y'];
     vectorOrange1.drawXYCanvas(x,y,width);
     vectorGreen1.drawXYCanvas(x2,y2,width);
     vectorRed1.drawXYCanvas(x3,y3,width);
@@ -181,10 +390,10 @@ function drawPositiveSeqXYCanvas(x,y,width=3){
 
 // to calculate and draw Negative Sequence (A2,B2,C2) based on A2 Canvas (x,y)
 function drawNegativeSeqXYCanvas(x,y,width=3){
-    let x2 = calcCoordinatesOfTurnedPoint(vectorOrange3.x0, vectorOrange3.y0, x, y, -120)['x'];
-    let y2 = calcCoordinatesOfTurnedPoint(vectorOrange3.x0, vectorOrange3.y0, x, y, -120)['y'];
-    let x3 = calcCoordinatesOfTurnedPoint(vectorOrange3.x0, vectorOrange3.y0, x, y, 120)['x'];
-    let y3 = calcCoordinatesOfTurnedPoint(vectorOrange3.x0, vectorOrange3.y0, x, y, 120)['y'];
+    let x2 = getCoordinatesOfTurnedPoint(vectorOrange3.x0, vectorOrange3.y0, x, y, -120)['x'];
+    let y2 = getCoordinatesOfTurnedPoint(vectorOrange3.x0, vectorOrange3.y0, x, y, -120)['y'];
+    let x3 = getCoordinatesOfTurnedPoint(vectorOrange3.x0, vectorOrange3.y0, x, y, 120)['x'];
+    let y3 = getCoordinatesOfTurnedPoint(vectorOrange3.x0, vectorOrange3.y0, x, y, 120)['y'];
     vectorOrange3.drawXYCanvas(x,y,width);
     vectorGreen3.drawXYCanvas(x2,y2,width);
     vectorRed3.drawXYCanvas(x3,y3,width);
@@ -198,8 +407,8 @@ function drawZeroSeqXYCanvas(x,y,width=3){
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
-
-axisScale = 0.8;    // to set scale of the canvas
+/*
+axisScale = 0.1;    // to set scale of the canvas
 arc_count=4;        // to set a number of arcs
 degrees={0:'0',1:'-30',2:'-60',3:'-90',4:'-120',5:'-150',6:'-180',7:'150',8:'120',9:'90',10:'60',11:'30'};
 
@@ -446,3 +655,4 @@ canvas.onmouseout = function(event){
     vectorRed3.isCaptured = vectorGreen3.isCaptured = vectorOrange3.isCaptured = false;
     vectorRed4.isCaptured = vectorGreen4.isCaptured = vectorOrange4.isCaptured = false;
 }
+*/
