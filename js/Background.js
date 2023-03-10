@@ -3,14 +3,15 @@ class Background {
     axisScale=1/*0.8*/;              // to set scale of the canvas
     backgroundArcCount=4;       // to set a number of arcs
     backgroundLineWidth=0.3;    // to set line width for the background
+    bgcolor;
 
-
-    constructor(ctx, title, x0, y0, size) {
+    constructor(ctx, title, vectorDiagramCenter, size, bgcolor) {
         this.ctx = ctx;
         this.title = title;
-        this.x0 = x0;
-        this.y0 = y0;
+        this.x0 = vectorDiagramCenter.xCanvas;
+        this.y0 = vectorDiagramCenter.yCanvas;
         this.size = size;
+        this.bgcolor = bgcolor;
     }
 
 
@@ -18,12 +19,13 @@ class Background {
         
         this.ctx.save();
 
-        this.ctx.font = "18px serif"; 
+        this.ctx.fillStyle = this.bgcolor;
+        this.ctx.font = "22px serif"; 
         this.ctx.textAlign = "center";
-        this.ctx.fillText(this.title, this.x0, this.y0-this.size/(2.95-this.axisScale));
+        this.ctx.fillText(this.title, this.x0, this.y0-this.size/(2.8-this.axisScale));
 
         this.ctx.lineWidth = this.backgroundLineWidth;
-        this.ctx.strokeStyle = 'black';
+        this.ctx.strokeStyle = this.bgcolor;
 
         for (let i=0;i<this.backgroundArcCount;i++){
             this.ctx.beginPath();

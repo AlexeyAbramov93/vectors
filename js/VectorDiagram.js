@@ -12,79 +12,72 @@ class VectorDiagram {
 
     title;  // VectorDiagram name
 
-    VectorDiagramCenterXCanvas; // X coordinate of the VectorDiagram center
-    VectorDiagramCenterYCanvas; // Y coordinate of the VectorDiagram center
+    vectorDiagramCenter = {}; // coordinate of the VectorDiagram center (xCanvas,yCanvas) 
 
     background; // axes(0,30,60,90,120... degrees) + arcs + title
 
     vectorsArray=[];    // array of vector objects
 
-    static mashtab;
-    static scale; // =2*Mashtab/width eg: max width = 500px, max mashtab = 2000В, scale = 8, it means 2000V=500px/2*8
+    mashtab;
+    scale; // =2*Mashtab/width eg: max width = 500px, max mashtab = 2000В, scale = 8, it means 2000V=500px/2*8
 
     vectorsValuesPrev;
+
+    isCaptured = false; // true if any vector is captured onmousedown, otherwise false
     
-    constructor(ctx, topLeftX, topLeftY, title, settings) {
-        this.ctx = ctx;
-        this.topLeftX = topLeftX;
-        this.topLeftY = topLeftY;
+    constructor(settings) {
+        this.ctx = settings.ctx;
+        this.topLeftX = settings.topLeft.x;
+        this.topLeftY = settings.topLeft.y;
         this.width = settings.width;
-        this.title = title;
+        this.title = settings.title;
 
-        VectorDiagram.mashtab = settings.mashtab;
-        VectorDiagram.scale = 2*settings.mashtab/this.width;
+        this.mashtab = settings.mashtab;
+        this.scale = 2*settings.mashtab/this.width;
 
-        this.VectorDiagramCenterXCanvas = topLeftX+this.width/2;
-        this.VectorDiagramCenterYCanvas = topLeftY+this.width/2;
-        this.background = new Background(ctx, title, this.VectorDiagramCenterXCanvas, this.VectorDiagramCenterYCanvas, this.width);
+        this.vectorWidth = settings.vectorWidth;
+
+        this.vectorDiagramCenter = {xCanvas: this.topLeftX+this.width/2, yCanvas: this.topLeftY+this.width/2};
+
+        this.background = new Background(ctx, this.title, this.vectorDiagramCenter, this.width, settings.bgcolor);
 
         for (let i=0;i<settings.vectors.length;i++){
-            this.vectorsArray.push(new Vector(ctx, this.VectorDiagramCenterXCanvas, this.VectorDiagramCenterYCanvas, settings.vectors[i].name, settings.vectors[i].color, this.scale));
+            this.vectorsArray.push(new Vector(ctx, this.vectorDiagramCenter, settings.vectors[i], this.scale, this.vectorWidth));
         }
     }
 
-    drawVectorsByCoordinates(coordinates) {
-        VectorDiagram.scale = 2*VectorDiagram.mashtab/this.width;
+    draw(valuesXYinVolts) {
+        this.scale = 2*this.mashtab/this.width;
         this.background.draw();
-        for (let i=0;i<coordinates.length;i++){
-            this.vectorsArray[i].scale = VectorDiagram.scale;
-            this.vectorsArray[i].draw(this.VectorDiagramCenterXCanvas, this.VectorDiagramCenterYCanvas, coordinates[i].xCanvas, coordinates[i].yCanvas);
+        for (let i=0;i<valuesXYinVolts.length;i++){
+            this.vectorsArray[i].scale = this.scale;            
+            this.vectorsArray[i].draw(
+                valuesXYinVolts[i].start.x,
+                valuesXYinVolts[i].start.y,
+                valuesXYinVolts[i].voltage.x,
+                valuesXYinVolts[i].voltage.y,
+                this.scale
+                );
         }
-    }
-
-    drawVectorsByValues(values) {
-        VectorDiagram.scale = 2*VectorDiagram.mashtab/this.width;
-        var coordinates = [];
-        for (let i=0;i<values.length;i++){
-            let x = values[i].value*Math.cos(values[i].angle*Math.PI/180)/VectorDiagram.scale;
-            let y = values[i].value*Math.sin(values[i].angle*Math.PI/180)/VectorDiagram.scale;
-            let xCanvas = this.VectorDiagramCenterXCanvas+x;
-            let yCanvas = this.VectorDiagramCenterYCanvas-y;
-            coordinates.push({'xCanvas': xCanvas, 'yCanvas': yCanvas});
-        } 
-        this.drawVectorsByCoordinates(coordinates);
     }
 
     // to get array with the saved values {value:659, angle:59} of the all vectors
-    getSavedPhaseVectorsValuesPrev(){
-        let savedPhaseVectorsValuesPrev=[];
+    getSavedValuesXY(){
+        let savedValuesXY=[];
         for (let i=0;i<this.vectorsArray.length;i++){
-            savedPhaseVectorsValuesPrev.push({value: this.vectorsArray[i].radiusPrev, angle: this.vectorsArray[i].anglePrev});
-        }
-        return savedPhaseVectorsValuesPrev;
-    }
 
-    getCoordinatesFromClick(xCanvas,yCanvas) {
-        let coordinates=[];
-        for (let i=0;i<this.vectorsArray.length;i++){
-            if (this.vectorsArray[i].isCaptured){
-                coordinates.push({'xCanvas':xCanvas,'yCanvas':yCanvas});
-            }
-            else{
-                coordinates.push({'xCanvas':this.vectorsArray[i].xPrevCanvas,'yCanvas':this.vectorsArray[i].yPrevCanvas});
-            }
+            savedValuesXY.push({
+                start: {
+                    x: this.vectorsArray[i].xStartPrev,
+                    y: this.vectorsArray[i].yStartPrev
+                }, 
+                voltage: {
+                    x: this.vectorsArray[i].xEndPrev, 
+                    y: this.vectorsArray[i].yEndPrev
+                }
+            })
         }
-        return coordinates;
+        return savedValuesXY;
     }
 
     checkCapture(x,y){
@@ -95,26 +88,15 @@ class VectorDiagram {
             }
         }
         this.vectorsArray[min].isCaptured = this.vectorsArray[min].clickDistance(x,y)<25;
+        this.isCaptured = this.vectorsArray[min].clickDistance(x,y)<25;
     }
 
     resetCapture(){
         for (let i=0;i<this.vectorsArray.length;i++){
             this.vectorsArray[i].isCaptured = false;
+            this.isCaptured = false;
         }
     }
 
-
-    // getCoordinatesFromValueAngle(values) {
-    //     var cordinates = [];
-
-    //     for (let i=0;i<values.length;i++){
-            
-    //         let x = Vector.convert(values[i].value, values[i].angle, phaseVectors.x0, phaseVectors.y0).xCanvas
-    //         let y = Vector.convert(values[i].value, values[i].angle, phaseVectors.x0, phaseVectors.y0).yCanvas
-        
-    //         cordinates.push({'xCanvas': x, 'yCanvas': y});
-    //     } 
-    //     return cordinates;
-    // }
 }
 

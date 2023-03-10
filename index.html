@@ -17,7 +17,8 @@
 		<form name="mashtabValue">
 			Масштаб:
 			<input type="number" name="mashtab" onchange='eventFormMashtab(this.value)' id="mashtab">
-			<br>
+			<br> 
+			<!-- eventFormMashtab   ON -->
 
 			Va:
 			<input type="text" name="Va" onchange='eventFormVectorsABC(this.value)' id="Va">
@@ -52,19 +53,13 @@
 		<canvas id="canvas" width="1500" height="1500"></canvas>
 	</div>
 
+	<script  src='js/complex.js'></script>
+	<script  src='js/utils.js'></script>
 
+    <script src="js/vectorDiagram.js"></script>
+    <script src="js/background.js"></script>
+    <script src="js/vector.js"></script>
 
-
-	<script  src='js/Complex.js'></script>
-
-    <script src="js/getCoordinatesOfTurnedPoint.js"></script>
-    <script src="js/getA1A2A0coordinates.js"></script>
-
-    <script src="js/VectorDiagram.js"></script>
-    <script src="js/Background.js"></script>
-    <script src="js/Vector.js"></script>
-
-    <script src="js/Sequence.js"></script>
     <script src="js/app.js"></script>
 
     <footer></footer>
