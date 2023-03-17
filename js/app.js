@@ -343,7 +343,6 @@ function eventFormVectorsABC(value) {
     negativeVectors2Diagram.draw(negativeVectors2ValuesXY);
     zeroVectors2Diagram.draw(zeroVectors2ValuesXY);
     
-    document.getElementById("mashtab").value = phaseVectorsSettings.mashtab;
     document.getElementById("Va").value = phaseVectorsDiagram.vectorsArray[0].radiusPrev;
     document.getElementById("FIa").value = phaseVectorsDiagram.vectorsArray[0].anglePrev;
     document.getElementById("Vb").value = phaseVectorsDiagram.vectorsArray[1].radiusPrev;
@@ -417,7 +416,6 @@ function eventFormVectorsA1A2A0(value) {
     negativeVectors2Diagram.draw(negativeVectors2ValuesXY);
     zeroVectors2Diagram.draw(zeroVectors2ValuesXY);
     
-    document.getElementById("mashtab").value = phaseVectorsSettings.mashtab;
     document.getElementById("Va").value = phaseVectorsDiagram.vectorsArray[0].radiusPrev;
     document.getElementById("FIa").value = phaseVectorsDiagram.vectorsArray[0].anglePrev;
     document.getElementById("Vb").value = phaseVectorsDiagram.vectorsArray[1].radiusPrev;
@@ -707,7 +705,6 @@ canvas.onmousemove = function(event){
 
         }
 
-        document.getElementById("mashtab").value = phaseVectorsSettings.mashtab;
         document.getElementById("Va").value = phaseVectorsDiagram.vectorsArray[0].radiusPrev;
         document.getElementById("FIa").value = phaseVectorsDiagram.vectorsArray[0].anglePrev;
         document.getElementById("Vb").value = phaseVectorsDiagram.vectorsArray[1].radiusPrev;
