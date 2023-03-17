@@ -343,12 +343,12 @@ function eventFormVectorsABC(value) {
     negativeVectors2Diagram.draw(negativeVectors2ValuesXY);
     zeroVectors2Diagram.draw(zeroVectors2ValuesXY);
     
-    document.getElementById("Va").value = phaseVectorsDiagram.vectorsArray[0].radiusPrev;
-    document.getElementById("FIa").value = phaseVectorsDiagram.vectorsArray[0].anglePrev;
-    document.getElementById("Vb").value = phaseVectorsDiagram.vectorsArray[1].radiusPrev;
-    document.getElementById("FIb").value = phaseVectorsDiagram.vectorsArray[1].anglePrev;
-    document.getElementById("Vc").value = phaseVectorsDiagram.vectorsArray[2].radiusPrev;
-    document.getElementById("FIc").value = phaseVectorsDiagram.vectorsArray[2].anglePrev;
+    // document.getElementById("Va").value = phaseVectorsDiagram.vectorsArray[0].radiusPrev;
+    // document.getElementById("FIa").value = phaseVectorsDiagram.vectorsArray[0].anglePrev;
+    // document.getElementById("Vb").value = phaseVectorsDiagram.vectorsArray[1].radiusPrev;
+    // document.getElementById("FIb").value = phaseVectorsDiagram.vectorsArray[1].anglePrev;
+    // document.getElementById("Vc").value = phaseVectorsDiagram.vectorsArray[2].radiusPrev;
+    // document.getElementById("FIc").value = phaseVectorsDiagram.vectorsArray[2].anglePrev;
 
     document.getElementById("V1").value = positiveVectorsDiagram.vectorsArray[0].radiusPrev;
     document.getElementById("FI1").value = positiveVectorsDiagram.vectorsArray[0].anglePrev;
@@ -423,12 +423,12 @@ function eventFormVectorsA1A2A0(value) {
     document.getElementById("Vc").value = phaseVectorsDiagram.vectorsArray[2].radiusPrev;
     document.getElementById("FIc").value = phaseVectorsDiagram.vectorsArray[2].anglePrev;
 
-    document.getElementById("V1").value = positiveVectorsDiagram.vectorsArray[0].radiusPrev;
-    document.getElementById("FI1").value = positiveVectorsDiagram.vectorsArray[0].anglePrev;
-    document.getElementById("V2").value = negativeVectorsDiagram.vectorsArray[0].radiusPrev;
-    document.getElementById("FI2").value = negativeVectorsDiagram.vectorsArray[0].anglePrev;
-    document.getElementById("V0").value = zeroVectorsDiagram.vectorsArray[0].radiusPrev;
-    document.getElementById("FI0").value = zeroVectorsDiagram.vectorsArray[0].anglePrev;
+    // document.getElementById("V1").value = positiveVectorsDiagram.vectorsArray[0].radiusPrev;
+    // document.getElementById("FI1").value = positiveVectorsDiagram.vectorsArray[0].anglePrev;
+    // document.getElementById("V2").value = negativeVectorsDiagram.vectorsArray[0].radiusPrev;
+    // document.getElementById("FI2").value = negativeVectorsDiagram.vectorsArray[0].anglePrev;
+    // document.getElementById("V0").value = zeroVectorsDiagram.vectorsArray[0].radiusPrev;
+    // document.getElementById("FI0").value = zeroVectorsDiagram.vectorsArray[0].anglePrev;
 }
 
 
